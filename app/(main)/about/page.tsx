@@ -11,7 +11,7 @@ export default function AboutPage() {
               About Sleepycare
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Your trusted partner for premium quality wipes. We're committed to providing
+              Your trusted partner for premium quality wipes. We&apos;re committed to providing
               eco-friendly, safe, and effective cleaning solutions for every need.
             </p>
           </div>
@@ -30,7 +30,7 @@ export default function AboutPage() {
               </p>
               <p className="text-gray-700 mb-4">
                 We understand that cleaning products play a crucial role in maintaining
-                hygiene and health. That's why we've dedicated ourselves to developing
+                hygiene and health. That&apos;s why we&apos;ve dedicated ourselves to developing
                 innovative solutions that meet the highest standards of quality and safety.
               </p>
               <p className="text-gray-700">
@@ -77,7 +77,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Sustainability</h3>
               <p className="text-gray-600">
-                We're committed to protecting our planet with biodegradable materials
+                We&apos;re committed to protecting our planet with biodegradable materials
                 and eco-friendly manufacturing processes.
               </p>
             </div>
@@ -99,7 +99,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">Customer Care</h3>
               <p className="text-gray-600">
-                Your satisfaction is our priority. We're dedicated to providing
+                Your satisfaction is our priority. We&apos;re dedicated to providing
                 exceptional products and outstanding service.
               </p>
             </div>

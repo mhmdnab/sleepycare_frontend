@@ -3,8 +3,7 @@ import Image from 'next/image';
 import { Leaf, Shield, Heart, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
-import { productsApi } from '@/lib/api/mockApi';
-import { categories, mockTestimonials } from '@/lib/data/mockData';
+import { productsApi, categoriesApi } from '@/lib/api/mockApi';
 import {
   AnimatedHero,
   AnimatedSection,
@@ -14,8 +13,36 @@ import {
   AnimatedSocialGrid
 } from '@/components/AnimatedComponents';
 
+// Testimonials are kept as static content since they don't change frequently
+const testimonials = [
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    role: 'New Mom',
+    content: 'These baby wipes are absolutely amazing! So gentle on my baby\'s skin and I love that they\'re eco-friendly.',
+    rating: 5,
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    role: 'Restaurant Owner',
+    content: 'We use the antibacterial wipes throughout our restaurant. They work incredibly well and the price is unbeatable.',
+    rating: 5,
+  },
+  {
+    id: 3,
+    name: 'Emily Davis',
+    role: 'Homemaker',
+    content: 'The kitchen wipes have made cleaning so much easier. They cut through grease like nothing else I\'ve tried.',
+    rating: 5,
+  },
+];
+
 export default async function HomePage() {
-  const bestSellers = await productsApi.getBestSellers();
+  const [bestSellers, categories] = await Promise.all([
+    productsApi.getBestSellers(),
+    categoriesApi.getAll()
+  ]);
 
   return (
     <div>
@@ -131,7 +158,7 @@ export default async function HomePage() {
             </h2>
           </AnimatedSection>
 
-          <AnimatedTestimonialGrid testimonials={mockTestimonials} />
+          <AnimatedTestimonialGrid testimonials={testimonials} />
         </div>
       </section>
 

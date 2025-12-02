@@ -6,9 +6,9 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { productsApi } from '@/lib/api/mockApi';
-import { categories } from '@/lib/data/mockData';
+import { productsApi, categoriesApi } from '@/lib/api/mockApi';
 import { Product } from '@/lib/store/cart';
+import { CategoryRead } from '@/lib/api/types';
 
 export default function ShopPage() {
   const searchParams = useSearchParams();
@@ -16,6 +16,7 @@ export default function ShopPage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || 'all');
@@ -23,16 +24,20 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState<string>('name');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Load products
+  // Load products and categories
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadData = async () => {
       setLoading(true);
-      const data = await productsApi.getAll();
-      setProducts(data);
-      setFilteredProducts(data);
+      const [productsData, categoriesData] = await Promise.all([
+        productsApi.getAll(),
+        categoriesApi.getAll()
+      ]);
+      setProducts(productsData);
+      setFilteredProducts(productsData);
+      setCategories(categoriesData);
       setLoading(false);
     };
-    loadProducts();
+    loadData();
   }, []);
 
   // Apply filters
@@ -139,13 +144,13 @@ export default function ShopPage() {
                     <input
                       type="radio"
                       name="category"
-                      value={cat.id}
-                      checked={selectedCategory === cat.id}
+                      value={cat.name}
+                      checked={selectedCategory === cat.name}
                       onChange={(e) => setSelectedCategory(e.target.value)}
                       className="text-primary-600"
                     />
                     <span>
-                      {cat.icon} {cat.name}
+                      {cat.name}
                     </span>
                   </label>
                 ))}
