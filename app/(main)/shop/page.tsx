@@ -1,0 +1,262 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { ProductCard } from '@/components/ProductCard';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { productsApi } from '@/lib/api/mockApi';
+import { categories } from '@/lib/data/mockData';
+import { Product } from '@/lib/store/cart';
+
+export default function ShopPage() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || 'all');
+  const [priceRange, setPriceRange] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<string>('name');
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Load products
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      const data = await productsApi.getAll();
+      setProducts(data);
+      setFilteredProducts(data);
+      setLoading(false);
+    };
+    loadProducts();
+  }, []);
+
+  // Apply filters
+  useEffect(() => {
+    let result = [...products];
+
+    // Category filter
+    if (selectedCategory !== 'all') {
+      result = result.filter((p) => p.category === selectedCategory);
+    }
+
+    // Price filter
+    if (priceRange !== 'all') {
+      if (priceRange === 'under10') {
+        result = result.filter((p) => p.price < 10);
+      } else if (priceRange === '10to15') {
+        result = result.filter((p) => p.price >= 10 && p.price < 15);
+      } else if (priceRange === 'over15') {
+        result = result.filter((p) => p.price >= 15);
+      }
+    }
+
+    // Search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (p) =>
+          p.name.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+      );
+    }
+
+    // Sort
+    if (sortBy === 'name') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === 'price-low') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-high') {
+      result.sort((a, b) => b.price - a.price);
+    }
+
+    setFilteredProducts(result);
+  }, [products, selectedCategory, priceRange, searchQuery, sortBy]);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">Shop All Products</h1>
+
+          {/* Search Bar */}
+          <div className="flex gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+              />
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center space-x-2 md:hidden"
+            >
+              <SlidersHorizontal className="w-5 h-5" />
+              <span>Filters</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Filters Sidebar */}
+          <aside
+            className={`md:w-64 space-y-6 ${
+              showFilters ? 'block' : 'hidden md:block'
+            }`}
+          >
+            {/* Category Filter */}
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-4">Category</h3>
+              <div className="space-y-2">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="category"
+                    value="all"
+                    checked={selectedCategory === 'all'}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="text-primary-600"
+                  />
+                  <span>All Products</span>
+                </label>
+                {categories.map((cat) => (
+                  <label
+                    key={cat.id}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="category"
+                      value={cat.id}
+                      checked={selectedCategory === cat.id}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="text-primary-600"
+                    />
+                    <span>
+                      {cat.icon} {cat.name}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Price Filter */}
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-4">Price Range</h3>
+              <div className="space-y-2">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="price"
+                    value="all"
+                    checked={priceRange === 'all'}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="text-primary-600"
+                  />
+                  <span>All Prices</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="price"
+                    value="under10"
+                    checked={priceRange === 'under10'}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="text-primary-600"
+                  />
+                  <span>Under $10</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="price"
+                    value="10to15"
+                    checked={priceRange === '10to15'}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="text-primary-600"
+                  />
+                  <span>$10 - $15</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="price"
+                    value="over15"
+                    checked={priceRange === 'over15'}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                    className="text-primary-600"
+                  />
+                  <span>Over $15</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Reset Filters */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => {
+                setSelectedCategory('all');
+                setPriceRange('all');
+                setSearchQuery('');
+                setSortBy('name');
+              }}
+            >
+              Reset Filters
+            </Button>
+          </aside>
+
+          {/* Products Grid */}
+          <div className="flex-1">
+            {/* Sort */}
+            <div className="flex justify-between items-center mb-6">
+              <p className="text-gray-600">
+                {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+              </p>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+              >
+                <option value="name">Sort by Name</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+
+            {/* Products */}
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="inline-block w-12 h-12 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+                <p className="mt-4 text-gray-600">Loading products...</p>
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg">
+                <p className="text-gray-600 text-lg">No products found</p>
+                <p className="text-gray-500 mt-2">Try adjusting your filters</p>
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

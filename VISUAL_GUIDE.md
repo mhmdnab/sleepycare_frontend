@@ -1,0 +1,490 @@
+# 🎨 Visual Page Guide - WipesMart
+
+## Overview of All Pages
+
+This document describes what each page looks like and contains.
+
+---
+
+## 🏠 Customer Pages
+
+### 1. Landing Page (`/`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ [Navbar: Logo | Links | Cart | Login]   │
+├─────────────────────────────────────────┤
+│                                         │
+│   🧼 Premium Wipes for Every Need      │
+│   [Large Hero Image] [Shop Now Button] │
+│                                         │
+├─────────────────────────────────────────┤
+│        Shop by Category                 │
+│  [👶][🧼][🍽️][🛋️][🪟][🧹]          │
+├─────────────────────────────────────────┤
+│      Why Choose WipesMart?              │
+│  [🌿][🛡️][❤️][✨] Features           │
+├─────────────────────────────────────────┤
+│         Best Sellers                    │
+│  [Product 1][Product 2][Product 3][P4] │
+├─────────────────────────────────────────┤
+│       Customer Testimonials             │
+│  [⭐⭐⭐⭐⭐ Review Cards]            │
+├─────────────────────────────────────────┤
+│     Ready to Experience Premium?        │
+│        [Start Shopping Now]             │
+├─────────────────────────────────────────┤
+│ [Footer: Links | Social | Newsletter]   │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Large hero with gradient background
+- 6 category cards with emojis
+- 4 feature cards (eco-friendly, safe, care, effective)
+- 4 best seller product cards
+- 3 testimonial cards with 5-star ratings
+- CTA section with gradient
+- Full footer
+
+---
+
+### 2. Shop Page (`/shop`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ [Navbar]                                │
+├─────────────────────────────────────────┤
+│ Shop All Products                       │
+│ [🔍 Search Bar..................] [≡]  │
+├─────┬───────────────────────────────────┤
+│ Fil │  Showing 12 products [Sort ▼]    │
+│ ters│                                   │
+│     │  ┌──┐ ┌──┐ ┌──┐                 │
+│ 📁  │  │P1│ │P2│ │P3│                 │
+│Cate │  └──┘ └──┘ └──┘                 │
+│gory │  ┌──┐ ┌──┐ ┌──┐                 │
+│     │  │P4│ │P5│ │P6│                 │
+│ 💰  │  └──┘ └──┘ └──┘                 │
+│Price│  ┌──┐ ┌──┐ ┌──┐                 │
+│     │  │P7│ │P8│ │P9│                 │
+│     │  └──┘ └──┘ └──┘                 │
+│[Reset] ┌──┐ ┌──┐ ┌──┐                 │
+│     │  │10│ │11│ │12│                 │
+│     │  └──┘ └──┘ └──┘                 │
+└─────┴───────────────────────────────────┘
+│ [Footer]                                │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Search bar at top
+- Sidebar filters (category + price)
+- Sort dropdown
+- 3-column product grid
+- Each card: image, name, description, price, "Add" button
+- Mobile: Filters collapse with button
+- Product count display
+- Reset filters button
+
+---
+
+### 3. Product Details (`/product/1`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ [Navbar]                                │
+├──────────────┬──────────────────────────┤
+│              │  Gentle Baby Wipes       │
+│              │  [baby] In Stock (150)   │
+│   [Large     │  ⭐⭐⭐⭐⭐ (127 reviews)│
+│    Product   │                          │
+│     Image]   │  $12.99                  │
+│              │                          │
+│              │  Product Description...   │
+│              │                          │
+│              │  🌿 Eco-friendly         │
+│              │  🛡️ Dermatologically     │
+│              │  ⭐ Premium Quality       │
+│              │                          │
+│              │  Quantity: [-] 1 [+]     │
+│              │  Total: $12.99           │
+│              │                          │
+│              │  [Add to Cart - Full]    │
+├──────────────┴──────────────────────────┤
+│         Related Products                │
+│  [Product 1][Product 2][Product 3][P4] │
+├─────────────────────────────────────────┤
+│ [Footer]                                │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Two-column layout
+- Large product image
+- Category badge
+- Stock indicator
+- 5-star rating
+- Price display
+- Full description
+- Feature icons
+- Quantity selector
+- Add to cart button
+- Related products carousel
+- Responsive: stacks on mobile
+
+---
+
+### 4. Login Page (`/auth/login`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ 🧼 WipesMart (Logo, top-left)          │
+│                                         │
+│         ┌─────────────────┐            │
+│         │  Welcome Back   │            │
+│         │                 │            │
+│         │  📧 Email       │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  🔒 Password    │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  ☑ Remember me  │            │
+│         │  Forgot pwd? →  │            │
+│         │                 │            │
+│         │  [Sign In]      │            │
+│         │                 │            │
+│         │  No account?    │            │
+│         │  Sign up →      │            │
+│         │                 │            │
+│         │  Demo: Any      │            │
+│         │  credentials    │            │
+│         └─────────────────┘            │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Centered card design
+- Email input with icon
+- Password input with icon
+- Remember me checkbox
+- Forgot password link
+- Sign in button
+- Link to register
+- Demo credentials note
+- Gradient background
+
+---
+
+### 5. Register Page (`/auth/register`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ 🧼 WipesMart                            │
+│                                         │
+│         ┌─────────────────┐            │
+│         │ Create Account  │            │
+│         │                 │            │
+│         │  👤 Full Name   │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  📧 Email       │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  🔒 Password    │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  🔒 Confirm     │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  ☑ I agree to   │            │
+│         │  Terms & Policy │            │
+│         │                 │            │
+│         │  [Create Acct]  │            │
+│         │                 │            │
+│         │  Have account?  │            │
+│         │  Sign in →      │            │
+│         └─────────────────┘            │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Name, email, password fields
+- Password confirmation
+- Terms acceptance checkbox
+- Create account button
+- Link to login
+- Form validation
+- Gradient background
+
+---
+
+### 6. Forgot Password (`/auth/forgot-password`)
+
+**Layout:**
+```
+┌─────────────────────────────────────────┐
+│ 🧼 WipesMart                            │
+│                                         │
+│         ┌─────────────────┐            │
+│         │ Forgot Password?│            │
+│         │ Enter email and │            │
+│         │ we'll send reset│            │
+│         │                 │            │
+│         │  📧 Email       │            │
+│         │  [..........]   │            │
+│         │                 │            │
+│         │  [Send Reset]   │            │
+│         │                 │            │
+│         │  ← Back to Login│            │
+│         └─────────────────┘            │
+│                                         │
+│  (After submit: Check Email message)   │
+└─────────────────────────────────────────┘
+```
+
+**Features:**
+- Simple email form
+- Send button
+- Back to login link
+- Success state with icon
+- Instructions text
+
+---
+
+## 🔧 Admin Pages
+
+### 7. Admin Dashboard (`/admin`)
+
+**Layout:**
+```
+┌──────┬──────────────────────────────────┐
+│      │  Dashboard                       │
+│  🧼  │  Welcome to admin panel          │
+│Admin │                                  │
+│Panel │  ┌──┐ ┌──┐ ┌──┐ ┌──┐          │
+│      │  │12│ │3 │ │3 │ │$│           │
+│──────│  │Pr│ │Or│ │Us│ │148│         │
+│[=]Da │  └──┘ └──┘ └──┘ └──┘          │
+│      │                                  │
+│[📦]P │        Quick Actions             │
+│rods  │  ┌────────┬────────┬────────┐  │
+│      │  │Manage  │View    │Manage  │  │
+│[🛒]O │  │Products│Orders  │Users   │  │
+│rders │  │📦     │🛒     │👥     │  │
+│      │  └────────┴────────┴────────┘  │
+│[👥]U │                                  │
+│sers  │                                  │
+│      │                                  │
+│[🚪]  │                                  │
+│Logout│                                  │
+└──────┴──────────────────────────────────┘
+```
+
+**Features:**
+- Dark sidebar navigation
+- 4 statistics cards
+- Quick action cards
+- Responsive: sidebar collapses on mobile
+- Active page highlighting
+
+---
+
+### 8. Products Management (`/admin/products`)
+
+**Layout:**
+```
+┌──────┬──────────────────────────────────┐
+│      │  Products               [+ Add]  │
+│Sidebar│  Manage product inventory       │
+│      │                                  │
+│      │  🔍 Search products.........     │
+│      │                                  │
+│      │  ┌──────────────────────────┐   │
+│      │  │Product│Cat│Price│Stock│Act│  │
+│      │  ├──────────────────────────┤   │
+│      │  │[img]  │👶 │$12  │150  │✏🗑│ │
+│      │  │Name   │   │     │     │   │  │
+│      │  ├──────────────────────────┤   │
+│      │  │[img]  │🧼 │$9   │200  │✏🗑│ │
+│      │  │Name   │   │     │     │   │  │
+│      │  ├──────────────────────────┤   │
+│      │  │ ... (12 products)        │   │
+│      │  └──────────────────────────┘   │
+└──────┴──────────────────────────────────┘
+```
+
+**Features:**
+- Search bar
+- Add product button
+- Products table with:
+  - Product image & name
+  - Category badge
+  - Price
+  - Stock (with low stock indicator)
+  - Edit/Delete buttons
+- Responsive table
+
+---
+
+### 9. Orders Management (`/admin/orders`)
+
+**Layout:**
+```
+┌──────┬──────────────────────────────────┐
+│      │  Orders                          │
+│Sidebar│  Manage customer orders          │
+│      │                                  │
+│      │  🔍 Search...  [Status Filter▼] │
+│      │                                  │
+│      │  ┌────────────────────────────┐ │
+│      │  │ID│Customer│Items│$│Status│Act││
+│      │  ├────────────────────────────┤ │
+│      │  │001│John   │3   │45│✅Deli│👁││
+│      │  │   │john@..│    │  │vered │  ││
+│      │  ├────────────────────────────┤ │
+│      │  │002│Jane   │5   │72│⚙️Proc│👁││
+│      │  │   │jane@..│    │  │ess   │  ││
+│      │  ├────────────────────────────┤ │
+│      │  │003│Bob    │2   │29│🚚Ship│👁││
+│      │  └────────────────────────────┘ │
+└──────┴──────────────────────────────────┘
+```
+
+**Features:**
+- Search orders
+- Status filter dropdown
+- Orders table with:
+  - Order ID
+  - Customer name & email
+  - Item count
+  - Total price
+  - Status badge (color-coded)
+  - Date
+  - View details button
+- Status colors: green (delivered), yellow (processing), blue (shipped)
+
+---
+
+### 10. Users Management (`/admin/users`)
+
+**Layout:**
+```
+┌──────┬──────────────────────────────────┐
+│      │  Users                           │
+│Sidebar│  Manage user accounts            │
+│      │                                  │
+│      │  🔍 Search users............     │
+│      │                                  │
+│      │  ┌──────────────────────────┐   │
+│      │  │User      │Role│Join │Orders│ │
+│      │  ├──────────────────────────┤   │
+│      │  │John Doe  │Cust│06/15│12   │ │
+│      │  │john@ex.. │ome │2023 │     │ │
+│      │  ├──────────────────────────┤   │
+│      │  │Jane Smith│Cust│08/22│8    │ │
+│      │  │jane@ex.. │ome │2023 │     │ │
+│      │  ├──────────────────────────┤   │
+│      │  │Admin User│Admi│01/01│0    │ │
+│      │  │admin@... │n   │2023 │     │ │
+│      │  └──────────────────────────┘   │
+└──────┴──────────────────────────────────┘
+```
+
+**Features:**
+- Search users
+- Users table with:
+  - Name & email
+  - Role badge (Admin/Customer)
+  - Join date
+  - Order count
+- Role color coding
+
+---
+
+## 🛒 Shopping Cart Drawer
+
+**Layout (Slide from right):**
+```
+┌─────────────────────────────────┐
+│ 🛒 Shopping Cart          [✕]  │
+├─────────────────────────────────┤
+│  ┌─────────────────────────┐   │
+│  │[img]  Baby Wipes        │   │
+│  │       $12.99            │   │
+│  │       [-] 2 [+] Remove  │   │
+│  └─────────────────────────┘   │
+│                                 │
+│  ┌─────────────────────────┐   │
+│  │[img]  Kitchen Wipes     │   │
+│  │       $7.99             │   │
+│  │       [-] 1 [+] Remove  │   │
+│  └─────────────────────────┘   │
+│                                 │
+│  (scrollable if more items)     │
+│                                 │
+├─────────────────────────────────┤
+│  Total: $33.97                  │
+│  [Checkout - Full Width]        │
+│  Clear Cart                     │
+└─────────────────────────────────┘
+```
+
+**Features:**
+- Slides in from right
+- Dark overlay behind
+- Item cards with:
+  - Product image
+  - Name & price
+  - Quantity controls
+  - Remove button
+- Total price
+- Checkout button
+- Clear cart link
+- Empty state when no items
+
+---
+
+## 🎨 Design Patterns
+
+### Colors Used:
+- **Primary**: Teal (#14b8a6) - Buttons, links, badges
+- **Success**: Green - Delivered, in stock
+- **Warning**: Yellow - Processing, low stock
+- **Info**: Blue - Shipped status
+- **Danger**: Red - Remove, delete actions
+- **Neutral**: Gray - Text, borders
+
+### Components:
+- **Cards**: White background, subtle shadow, rounded corners
+- **Buttons**: Teal primary, white text, hover effects
+- **Badges**: Rounded pills with category colors
+- **Tables**: Striped hover effect, clean headers
+- **Forms**: White inputs with focus ring
+
+### Icons:
+- Lucide React icons throughout
+- Emojis for categories (👶🧼🍽️🛋️🪟🧹)
+- Feature icons (🌿🛡️❤️✨⭐)
+
+---
+
+## 📱 Mobile Views
+
+All pages are responsive:
+- **Navigation**: Hamburger menu
+- **Filters**: Collapsible sidebar
+- **Grids**: Stack to 1-2 columns
+- **Tables**: Horizontal scroll or card view
+- **Cart**: Full-width on mobile
+- **Admin**: Collapsible sidebar with overlay
+
+---
+
+This visual guide shows the complete structure of all 10+ pages in your e-commerce frontend!
