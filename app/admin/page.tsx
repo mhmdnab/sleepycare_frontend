@@ -18,7 +18,7 @@ export default function AdminDashboard() {
       const orders = await ordersApi.getAll();
       const users = await usersApi.getAll();
 
-      const revenue = orders.reduce((sum, order) => sum + order.total, 0);
+      const revenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
 
       setStats({
         totalProducts: products.length,
