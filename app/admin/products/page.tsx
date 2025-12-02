@@ -23,8 +23,12 @@ export default function AdminProductsPage() {
       const data = await productsApi.getAll();
       // Map backend data to include image and category fields
       const mappedData: Product[] = data.map(p => ({
-        ...p,
-        image: p.image || p.image_url || '/placeholder-product.jpg',
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        description: p.description || '',
+        stock: p.stock,
+        image: p.image_url || '/placeholder-product.jpg',
         category: p.category_id || '',
       }));
       setProducts(mappedData);
