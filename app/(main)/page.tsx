@@ -13,6 +13,9 @@ import {
   AnimatedSocialGrid
 } from '@/components/AnimatedComponents';
 
+// Disable static generation since we need backend API at build time
+export const dynamic = 'force-dynamic';
+
 // Testimonials are kept as static content since they don't change frequently
 const testimonials = [
   {

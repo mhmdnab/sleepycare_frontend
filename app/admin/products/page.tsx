@@ -4,11 +4,18 @@ import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { productsApi } from '@/lib/api/mockApi';
+import { adminProductsApi } from '@/lib/api/mockApi';
 import { ProductRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
 
-interface Product extends ProductRead {
+interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  stock: number;
+  image_url: string | null;
+  category_id: string | null;
   image: string;
   category: string;
 }
@@ -20,14 +27,16 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     const loadProducts = async () => {
-      const data = await productsApi.getAll();
+      const data = await adminProductsApi.getAll();
       // Map backend data to include image and category fields
-      const mappedData: Product[] = data.map(p => ({
+      const mappedData: Product[] = data.map((p: ProductRead) => ({
         id: p.id,
         name: p.name,
+        description: p.description,
         price: p.price,
-        description: p.description || '',
         stock: p.stock,
+        image_url: p.image_url,
+        category_id: p.category_id,
         image: p.image_url || '/placeholder-product.jpg',
         category: p.category_id || '',
       }));

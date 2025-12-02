@@ -165,6 +165,10 @@ export const adminCategoriesApi = {
 
 // Admin Products API
 export const adminProductsApi = {
+  getAll: async (): Promise<ProductRead[]> => {
+    return apiClient.get<ProductRead[]>('/products');
+  },
+
   create: async (productData: ProductCreate): Promise<ProductRead> => {
     return apiClient.post<ProductRead>('/admin/products', productData);
   },
