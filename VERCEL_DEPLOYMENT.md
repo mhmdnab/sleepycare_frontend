@@ -5,15 +5,26 @@
 1. **Backend API Deployed**: Your FastAPI backend must be deployed and accessible via HTTPS before deploying the frontend.
 2. **MongoDB Atlas**: Ensure your MongoDB Atlas cluster allows connections from all IPs (0.0.0.0/0) or Vercel's IP ranges.
 
-## Environment Variables
+## ⚠️ Critical: Environment Variables
 
-In your Vercel project settings, add the following environment variable:
+### The Problem
+If you see errors like "Server Components render error" or blank pages, it's because the frontend is trying to connect to `http://localhost:8000` which doesn't exist in production.
+
+### The Solution
+
+In your **Frontend** Vercel project settings, add this environment variable:
 
 ```
-NEXT_PUBLIC_API_URL=https://your-backend-api-url.com
+Name: NEXT_PUBLIC_API_URL
+Value: https://sleepycare-backend-80qdtp8pn-ibrahim-hamdans-projects.vercel.app
+Environment: Production, Preview, Development
 ```
 
-Replace `your-backend-api-url.com` with your actual backend API URL.
+⚠️ **Important**:
+- Replace with YOUR actual backend URL
+- Do NOT include a trailing slash
+- Must start with `https://`
+- After adding, click "Redeploy" for changes to take effect
 
 ## Deployment Steps
 

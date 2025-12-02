@@ -28,13 +28,22 @@ function ShopPageContent() {
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const [productsData, categoriesData] = await Promise.all([
-        productsApi.getAll(),
-        categoriesApi.getAll()
-      ]);
-      setProducts(productsData);
-      setFilteredProducts(productsData);
-      setCategories(categoriesData);
+      try {
+        const results = await Promise.allSettled([
+          productsApi.getAll(),
+          categoriesApi.getAll()
+        ]);
+
+        if (results[0].status === 'fulfilled') {
+          setProducts(results[0].value);
+          setFilteredProducts(results[0].value);
+        }
+        if (results[1].status === 'fulfilled') {
+          setCategories(results[1].value);
+        }
+      } catch (error) {
+        console.error('Error loading shop data:', error);
+      }
       setLoading(false);
     };
     loadData();

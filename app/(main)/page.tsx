@@ -42,10 +42,26 @@ const testimonials = [
 ];
 
 export default async function HomePage() {
-  const [bestSellers, categories] = await Promise.all([
-    productsApi.getBestSellers(),
-    categoriesApi.getAll()
-  ]);
+  // Fetch data with error handling
+  let bestSellers: any[] = [];
+  let categories: any[] = [];
+
+  try {
+    const results = await Promise.allSettled([
+      productsApi.getBestSellers(),
+      categoriesApi.getAll()
+    ]);
+
+    if (results[0].status === 'fulfilled') {
+      bestSellers = results[0].value;
+    }
+    if (results[1].status === 'fulfilled') {
+      categories = results[1].value;
+    }
+  } catch (error) {
+    console.error('Error fetching homepage data:', error);
+    // Continue rendering with empty data
+  }
 
   return (
     <div>
