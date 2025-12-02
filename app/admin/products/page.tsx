@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { productsApi } from '@/lib/api/mockApi';
 import { ProductRead } from '@/lib/api/types';
@@ -104,11 +105,15 @@ export default function AdminProductsPage() {
                   <tr key={product.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-12 h-12 rounded object-cover"
-                        />
+                        <div className="relative w-12 h-12 rounded overflow-hidden">
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
+                        </div>
                         <div>
                           <div className="font-medium text-gray-900">{product.name}</div>
                           <div className="text-sm text-gray-500">ID: {product.id}</div>
