@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Package,
@@ -14,6 +14,7 @@ import {
   Store,
 } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 const menuItems = [
   {
@@ -50,7 +51,14 @@ const menuItems = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    router.push('/auth/login');
+  };
 
   return (
     <>
@@ -105,13 +113,13 @@ export function AdminSidebar() {
 
           {/* Logout */}
           <div className="p-4 border-t border-gray-800">
-            <Link
-              href="/"
-              className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
             >
               <LogOut className="w-5 h-5" />
               <span>Logout</span>
-            </Link>
+            </button>
           </div>
         </div>
       </aside>
