@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UserRead } from '../api/types';
-import { authApi } from '../api/mockApi';
+import { authApi } from '../api/api';
 
 interface AuthStore {
   user: UserRead | null;
