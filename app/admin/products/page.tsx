@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { adminProductsApi } from '@/lib/api/mockApi';
+import { adminProductsApi } from '@/lib/api/api';
 import { ProductRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
 

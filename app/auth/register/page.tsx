@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, User } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { authApi } from '@/lib/api/mockApi';
+import { authApi } from '@/lib/api/api';
 import { useAuthStore } from '@/lib/store/auth';
 
 export default function RegisterPage() {

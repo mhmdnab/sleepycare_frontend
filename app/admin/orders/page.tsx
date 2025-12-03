@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Eye, Search } from 'lucide-react';
-import { adminOrdersApi } from '@/lib/api/mockApi';
+import { adminOrdersApi } from '@/lib/api/api';
 import { OrderRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Package, ShoppingCart, Users, DollarSign } from 'lucide-react';
-import { productsApi, ordersApi, usersApi } from '@/lib/api/mockApi';
+import { productsApi, ordersApi, usersApi } from '@/lib/api/api';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { categoriesApi, adminCategoriesApi } from '@/lib/api/mockApi';
+import { categoriesApi, adminCategoriesApi } from '@/lib/api/api';
 import { CategoryRead } from '@/lib/api/types';
 
 interface Category {

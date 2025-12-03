@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Mail, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { authApi } from '@/lib/api/mockApi';
+import { authApi } from '@/lib/api/api';
 import { useAuthStore } from '@/lib/store/auth';
 
 export default function LoginPage() {

@@ -7,7 +7,7 @@ import { ShoppingCart, Minus, Plus, Star, Leaf, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
 import { useCartStore } from '@/lib/store/cart';
-import { productsApi } from '@/lib/api/mockApi';
+import { productsApi } from '@/lib/api/api';
 import { formatPrice } from '@/lib/utils';
 import { Product } from '@/lib/store/cart';
 

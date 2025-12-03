@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { adminUsersApi } from '@/lib/api/mockApi';
+import { adminUsersApi } from '@/lib/api/api';
 import { UserRead } from '@/lib/api/types';
 
 interface User {

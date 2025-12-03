@@ -6,7 +6,7 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { productsApi, categoriesApi } from '@/lib/api/mockApi';
+import { productsApi, categoriesApi } from '@/lib/api/api';
 import { Product } from '@/lib/store/cart';
 import { CategoryRead } from '@/lib/api/types';
 

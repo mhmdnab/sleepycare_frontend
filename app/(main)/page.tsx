@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Leaf, Shield, Heart, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
-import { productsApi, categoriesApi } from '@/lib/api/mockApi';
+import { productsApi, categoriesApi } from '@/lib/api/api';
 import {
   AnimatedHero,
   AnimatedSection,
