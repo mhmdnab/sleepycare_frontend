@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { adminPartnersApi } from '@/lib/api/api';
+import { PartnerRead } from '@/lib/api/types';
 
 interface Partner {
   id: string;
@@ -10,21 +12,28 @@ interface Partner {
   icon: string;
 }
 
-const initialPartners: Partner[] = [
-  { id: '1', name: 'Baby Wipes', icon: '👶' },
-  { id: '2', name: 'Antibacterial Wipes', icon: '🦠' },
-  { id: '3', name: 'Kitchen Wipes', icon: '🍽️' },
-  { id: '4', name: 'Furniture Wipes', icon: '🛋️' },
-  { id: '5', name: 'Glass Wipes', icon: '🪟' },
-  { id: '6', name: 'Floor Wipes', icon: '🧹' },
-];
-
 export default function AdminPartnersPage() {
-  const [partnerList, setPartnerList] = useState<Partner[]>(initialPartners);
+  const [partnerList, setPartnerList] = useState<Partner[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [formData, setFormData] = useState({ name: '', icon: '' });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadPartners();
+  }, []);
+
+  const loadPartners = async () => {
+    try {
+      const data = await adminPartnersApi.getAll();
+      setPartnerList(data);
+    } catch (error) {
+      console.error('Failed to load partners:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPartners = partnerList.filter((partner) =>
     partner.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -42,36 +51,40 @@ export default function AdminPartnersPage() {
     setShowModal(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this partner?')) {
-      setPartnerList(partnerList.filter((partner) => partner.id !== id));
+      try {
+        await adminPartnersApi.delete(id);
+        await loadPartners();
+      } catch (error) {
+        console.error('Failed to delete partner:', error);
+        alert('Failed to delete partner');
+      }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (editingPartner) {
-      // Update existing partner
-      setPartnerList(
-        partnerList.map((partner) =>
-          partner.id === editingPartner.id
-            ? { ...partner, name: formData.name, icon: formData.icon }
-            : partner
-        )
-      );
-    } else {
-      // Add new partner
-      const newPartner: Partner = {
-        id: Date.now().toString(),
-        name: formData.name,
-        icon: formData.icon,
-      };
-      setPartnerList([...partnerList, newPartner]);
+    try {
+      if (editingPartner) {
+        await adminPartnersApi.update(editingPartner.id, {
+          name: formData.name,
+          icon: formData.icon,
+        });
+      } else {
+        await adminPartnersApi.create({
+          name: formData.name,
+          icon: formData.icon,
+        });
+      }
+      await loadPartners();
+      setShowModal(false);
+      setFormData({ name: '', icon: '' });
+    } catch (error) {
+      console.error('Failed to save partner:', error);
+      alert('Failed to save partner');
     }
-
-    setShowModal(false);
-    setFormData({ name: '', icon: '' });
   };
 
   return (
@@ -103,7 +116,11 @@ export default function AdminPartnersPage() {
 
       {/* Partners Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredPartners.length === 0 ? (
+        {loading ? (
+          <div className="col-span-full text-center py-12">
+            <div className="inline-block w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : filteredPartners.length === 0 ? (
           <div className="col-span-full text-center py-12 bg-white rounded-lg">
             <p className="text-gray-600 text-lg">No partners found</p>
           </div>

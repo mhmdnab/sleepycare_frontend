@@ -16,6 +16,9 @@ import {
   ResetPasswordRequest,
   TransactionCreate,
   TransactionRead,
+  PartnerRead,
+  PartnerCreate,
+  PartnerUpdate,
 } from './types';
 import { Product } from '../store/cart';
 
@@ -209,6 +212,29 @@ export const adminUsersApi = {
 
   getOrdersCount: async (id: string): Promise<{ user_id: string; orders_count: number }> => {
     return apiClient.get<{ user_id: string; orders_count: number }>(`/admin/users/${id}/orders-count`);
+  },
+};
+
+// Admin Partners API
+export const adminPartnersApi = {
+  getAll: async (): Promise<PartnerRead[]> => {
+    return apiClient.get<PartnerRead[]>('/admin/partners');
+  },
+
+  getById: async (id: string): Promise<PartnerRead> => {
+    return apiClient.get<PartnerRead>(`/admin/partners/${id}`);
+  },
+
+  create: async (partnerData: PartnerCreate): Promise<PartnerRead> => {
+    return apiClient.post<PartnerRead>('/admin/partners', partnerData);
+  },
+
+  update: async (id: string, partnerData: PartnerUpdate): Promise<PartnerRead> => {
+    return apiClient.put<PartnerRead>(`/admin/partners/${id}`, partnerData);
+  },
+
+  delete: async (id: string): Promise<void> => {
+    return apiClient.delete(`/admin/partners/${id}`);
   },
 };
 

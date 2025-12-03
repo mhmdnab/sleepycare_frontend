@@ -10,6 +10,7 @@ interface Category {
   id: string;
   name: string;
   description: string | null;
+  icon: string | null;
 }
 
 export default function AdminCategoriesPage() {
@@ -18,7 +19,7 @@ export default function AdminCategoriesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [formData, setFormData] = useState({ name: '', description: '' });
+  const [formData, setFormData] = useState({ name: '', description: '', icon: '' });
 
   useEffect(() => {
     loadCategories();
@@ -41,13 +42,13 @@ export default function AdminCategoriesPage() {
 
   const handleAdd = () => {
     setEditingCategory(null);
-    setFormData({ name: '', description: '' });
+    setFormData({ name: '', description: '', icon: '' });
     setShowModal(true);
   };
 
   const handleEdit = (category: Category) => {
     setEditingCategory(category);
-    setFormData({ name: category.name, description: category.description || '' });
+    setFormData({ name: category.name, description: category.description || '', icon: category.icon || '' });
     setShowModal(true);
   };
 
@@ -71,16 +72,18 @@ export default function AdminCategoriesPage() {
         await adminCategoriesApi.update(editingCategory.id, {
           name: formData.name,
           description: formData.description || null,
+          icon: formData.icon || null,
         });
       } else {
         await adminCategoriesApi.create({
           name: formData.name,
           description: formData.description || null,
+          icon: formData.icon || null,
         });
       }
       await loadCategories();
       setShowModal(false);
-      setFormData({ name: '', description: '' });
+      setFormData({ name: '', description: '', icon: '' });
     } catch (error) {
       console.error('Failed to save category:', error);
       alert('Failed to save category');
@@ -131,7 +134,7 @@ export default function AdminCategoriesPage() {
               className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
             >
               <div className="text-center mb-4">
-                <div className="text-4xl mb-3">📁</div>
+                <div className="text-4xl mb-3">{category.icon || '📁'}</div>
                 <h3 className="font-semibold text-gray-900 text-lg">
                   {category.name}
                 </h3>
@@ -186,6 +189,23 @@ export default function AdminCategoriesPage() {
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Icon (Emoji)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.icon}
+                    onChange={(e) =>
+                      setFormData({ ...formData, icon: e.target.value })
+                    }
+                    placeholder="e.g., 🧼"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Use an emoji to represent this category
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

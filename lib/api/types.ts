@@ -62,16 +62,19 @@ export interface CategoryRead {
   id: string;
   name: string;
   description: string | null;
+  icon: string | null;
 }
 
 export interface CategoryCreate {
   name: string;
   description?: string | null;
+  icon?: string | null;
 }
 
 export interface CategoryUpdate {
   name?: string | null;
   description?: string | null;
+  icon?: string | null;
 }
 
 // Order Types
@@ -125,4 +128,23 @@ export interface TransactionRead {
   payment_method: string;
   status: string;
   created_at: string;
+}
+
+// Partner Types
+export interface PartnerRead {
+  id: string;
+  name: string;
+  icon: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PartnerCreate {
+  name: string;
+  icon: string;
+}
+
+export interface PartnerUpdate {
+  name?: string | null;
+  icon?: string | null;
 }
