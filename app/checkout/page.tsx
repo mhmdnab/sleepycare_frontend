@@ -12,7 +12,7 @@ import { ordersApi, transactionsApi } from '@/lib/api/api';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, total, clearCart } = useCartStore();
+  const { items, clearCart, getTotalPrice } = useCartStore();
   const { user, isAuthenticated } = useAuthStore();
 
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card'>('cash');
@@ -37,6 +37,7 @@ export default function CheckoutPage() {
     cvv: ''
   });
 
+  const total = getTotalPrice();
   const shippingCost = total > 35 ? 0 : 9.99;
   const tax = total * 0.08; // 8% tax
   const finalTotal = total + shippingCost + tax;
