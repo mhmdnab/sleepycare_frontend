@@ -114,9 +114,11 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               <span className="text-primary-600">{formatPrice(totalPrice)}</span>
             </div>
 
-            <Button className="w-full" size="lg">
-              Checkout
-            </Button>
+            <Link href="/checkout" className="block">
+              <Button className="w-full" size="lg" onClick={onClose}>
+                Checkout
+              </Button>
+            </Link>
 
             <button
               onClick={clearCart}
