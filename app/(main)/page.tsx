@@ -3,12 +3,13 @@ import Image from 'next/image';
 import { Leaf, Shield, Heart, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
-import { productsApi, categoriesApi } from '@/lib/api/api';
+import { productsApi, categoriesApi, adminPartnersApi } from '@/lib/api/api';
 import {
   AnimatedHero,
   AnimatedSection,
   AnimatedProductGrid,
   AnimatedCategoryGrid,
+  AnimatedPartnerGrid,
   AnimatedTestimonialGrid,
   AnimatedSocialGrid
 } from '@/components/AnimatedComponents';
@@ -45,11 +46,13 @@ export default async function HomePage() {
   // Fetch data with error handling
   let bestSellers: any[] = [];
   let categories: any[] = [];
+  let partners: any[] = [];
 
   try {
     const results = await Promise.allSettled([
       productsApi.getBestSellers(),
-      categoriesApi.getAll()
+      categoriesApi.getAll(),
+      adminPartnersApi.getAll()
     ]);
 
     if (results[0].status === 'fulfilled') {
@@ -57,6 +60,9 @@ export default async function HomePage() {
     }
     if (results[1].status === 'fulfilled') {
       categories = results[1].value;
+    }
+    if (results[2].status === 'fulfilled') {
+      partners = results[2].value;
     }
   } catch (error) {
     console.error('Error fetching homepage data:', error);
@@ -164,7 +170,7 @@ export default async function HomePage() {
               Available At
             </h2>
           </AnimatedSection>
-          <AnimatedCategoryGrid categories={categories} />
+          <AnimatedPartnerGrid partners={partners} />
         </div>
       </section>
 

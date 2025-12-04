@@ -105,6 +105,43 @@ export function AnimatedCategoryGrid({ categories }: { categories: any[] }) {
   );
 }
 
+export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
+  return (
+    <motion.div
+      variants={staggerContainer}
+      initial="initial"
+      whileInView="animate"
+      viewport={{ once: true }}
+      className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center"
+    >
+      {partners.map((partner) => (
+        <motion.div
+          key={partner.id}
+          variants={{
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 }
+          }}
+          whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+          className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow w-full"
+        >
+          <div className="flex flex-col items-center justify-center space-y-3">
+            {partner.icon ? (
+              <img
+                src={partner.icon}
+                alt={partner.name}
+                className="h-16 w-auto object-contain"
+              />
+            ) : (
+              <div className="text-4xl text-gray-400">🏢</div>
+            )}
+            <p className="text-sm font-medium text-gray-700 text-center">{partner.name}</p>
+          </div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+}
+
 export function AnimatedTestimonialGrid({ testimonials }: { testimonials: any[] }) {
   return (
     <motion.div
