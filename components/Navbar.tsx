@@ -1,11 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, X, Search, User, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { ShoppingCart, Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cart';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { categoriesApi } from '@/lib/api/api';
 import { Button } from './ui/Button';
 import { CartDrawer } from './CartDrawer';
 
@@ -14,10 +15,47 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const categoriesRef = useRef<HTMLDivElement>(null);
   const getTotalItems = useCartStore((state) => state.getTotalItems);
   const { user, isAuthenticated, logout } = useAuth();
 
   const totalItems = getTotalItems();
+
+  // Fetch categories
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await categoriesApi.getAll();
+        setCategories(data);
+      } catch (error) {
+        console.error('Failed to load categories:', error);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+      if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
+        setCategoriesOpen(false);
+      }
+    };
+
+    if (userMenuOpen || categoriesOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userMenuOpen, categoriesOpen]);
 
   const handleLogout = () => {
     logout();
@@ -40,25 +78,51 @@ export function Navbar() {
               <Link href="/shop" className="text-gray-700 hover:text-primary-600 transition-colors">
                 Shop
               </Link>
+
+              {/* Categories Dropdown */}
+              <div className="relative" ref={categoriesRef}>
+                <button
+                  onClick={() => setCategoriesOpen(!categoriesOpen)}
+                  className="flex items-center space-x-1 text-gray-700 hover:text-primary-600 transition-colors"
+                >
+                  <span>Categories</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {categoriesOpen && (
+                  <div className="absolute left-0 mt-2 w-56 bg-white rounded-lg shadow-lg py-2 z-50">
+                    {categories.length > 0 ? (
+                      categories.map((category) => (
+                        <Link
+                          key={category.id}
+                          href={`/shop?category=${category.id}`}
+                          onClick={() => setCategoriesOpen(false)}
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        >
+                          {category.icon && <span className="mr-2">{category.icon}</span>}
+                          {category.name}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-sm text-gray-500">No categories available</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <Link href="/contact" className="text-gray-700 hover:text-primary-600 transition-colors">
+                Contact Us
+              </Link>
               <Link href="/about" className="text-gray-700 hover:text-primary-600 transition-colors">
                 About
               </Link>
               <Link href="/faq" className="text-gray-700 hover:text-primary-600 transition-colors">
                 FAQ
               </Link>
-              <Link href="/shop?category=baby" className="text-gray-700 hover:text-primary-600 transition-colors">
-                Baby Wipes
-              </Link>
-              <Link href="/shop?category=antibacterial" className="text-gray-700 hover:text-primary-600 transition-colors">
-                Antibacterial
-              </Link>
             </div>
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-              <Link href="/shop" className="text-gray-700 hover:text-primary-600">
-                <Search className="w-5 h-5" />
-              </Link>
 
               <button
                 onClick={() => setCartOpen(true)}
@@ -73,7 +137,7 @@ export function Navbar() {
               </button>
 
               {/* User Menu - Desktop */}
-              <div className="hidden md:block relative">
+              <div className="hidden md:block relative" ref={userMenuRef}>
                 {isAuthenticated && user && user.role !== 'admin' ? (
                   <>
                     <button
@@ -127,6 +191,30 @@ export function Navbar() {
               >
                 Shop
               </Link>
+
+              {/* Mobile Categories */}
+              <div className="space-y-2">
+                <p className="py-2 text-sm font-semibold text-gray-900">Categories</p>
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/shop?category=${category.id}`}
+                    className="block py-2 pl-4 text-gray-600 hover:text-primary-600"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {category.icon && <span className="mr-2">{category.icon}</span>}
+                    {category.name}
+                  </Link>
+                ))}
+              </div>
+
+              <Link
+                href="/contact"
+                className="block py-2 text-gray-700 hover:text-primary-600"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Contact Us
+              </Link>
               <Link
                 href="/about"
                 className="block py-2 text-gray-700 hover:text-primary-600"
@@ -140,20 +228,6 @@ export function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 FAQ
-              </Link>
-              <Link
-                href="/shop?category=baby"
-                className="block py-2 text-gray-700 hover:text-primary-600"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Baby Wipes
-              </Link>
-              <Link
-                href="/shop?category=antibacterial"
-                className="block py-2 text-gray-700 hover:text-primary-600"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Antibacterial
               </Link>
 
               {/* Mobile User Menu */}
