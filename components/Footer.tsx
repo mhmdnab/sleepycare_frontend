@@ -92,7 +92,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
-          <p>&copy; 2024 Sleepycare. All rights reserved.</p>
+          <p>2025 Sleepycare.</p>
         </div>
       </div>
     </footer>
