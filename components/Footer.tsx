@@ -48,22 +48,22 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#" className="hover:text-primary-400 transition-colors">
+                <a href="/contact" className="hover:text-primary-400 transition-colors">
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary-400 transition-colors">
+                <a href="/shipping" className="hover:text-primary-400 transition-colors">
                   Shipping Info
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary-400 transition-colors">
+                <a href="/returns" className="hover:text-primary-400 transition-colors">
                   Returns
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary-400 transition-colors">
+                <a href="/faq" className="hover:text-primary-400 transition-colors">
                   FAQ
                 </a>
               </li>
