@@ -6,48 +6,23 @@ import { Search, SlidersHorizontal } from 'lucide-react';
 import { ProductCard } from '@/components/ProductCard';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { productsApi, categoriesApi } from '@/lib/api/api';
 import { Product } from '@/lib/store/cart';
 import { CategoryRead } from '@/lib/api/types';
+import { useProducts, useCategories } from '@/lib/hooks/useQueries';
 
 function ShopPageContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get('category');
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const { data: products = [], isLoading: loading } = useProducts();
+  const { data: categories = [] } = useCategories();
+
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<CategoryRead[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryParam || 'all');
   const [priceRange, setPriceRange] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('name');
   const [showFilters, setShowFilters] = useState(false);
-
-  // Load products and categories
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const results = await Promise.allSettled([
-          productsApi.getAll(),
-          categoriesApi.getAll()
-        ]);
-
-        if (results[0].status === 'fulfilled') {
-          setProducts(results[0].value);
-          setFilteredProducts(results[0].value);
-        }
-        if (results[1].status === 'fulfilled') {
-          setCategories(results[1].value);
-        }
-      } catch (error) {
-        console.error('Error loading shop data:', error);
-      }
-      setLoading(false);
-    };
-    loadData();
-  }, []);
 
   // Apply filters
   useEffect(() => {

@@ -106,17 +106,27 @@ export function AnimatedCategoryGrid({ categories }: { categories: any[] }) {
 }
 
 export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
+  console.log('Partners data:', partners);
+
+  if (!partners || partners.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-gray-500">No partners available at the moment.</p>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={staggerContainer}
       initial="initial"
       whileInView="animate"
       viewport={{ once: true }}
-      className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center"
+      className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center"
     >
-      {partners.map((partner) => (
+      {partners.map((partner, index) => (
         <motion.div
-          key={partner.id}
+          key={partner.id || index}
           variants={{
             initial: { opacity: 0, y: 20 },
             animate: { opacity: 1, y: 0 }
@@ -130,6 +140,9 @@ export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
                 src={partner.icon}
                 alt={partner.name}
                 className="h-16 w-auto object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"%3E%3Crect x="3" y="3" width="18" height="18" rx="2" ry="2"%3E%3C/rect%3E%3Cline x1="3" y1="9" x2="21" y2="9"%3E%3C/line%3E%3Cline x1="9" y1="21" x2="9" y2="9"%3E%3C/line%3E%3C/svg%3E';
+                }}
               />
             ) : (
               <div className="text-4xl text-gray-400">🏢</div>

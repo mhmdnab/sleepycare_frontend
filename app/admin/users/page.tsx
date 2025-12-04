@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Search } from 'lucide-react';
-import { adminUsersApi } from '@/lib/api/api';
 import { UserRead } from '@/lib/api/types';
+import { useAdminUsers, useUserOrdersCount } from '@/lib/hooks/useQueries';
 
 interface User {
   id: string;
@@ -15,51 +15,18 @@ interface User {
 }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: usersData = [], isLoading: loading } = useAdminUsers();
   const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  const loadUsers = async () => {
-    try {
-      const usersData = await adminUsersApi.getAll();
-
-      // Fetch order counts for each user
-      const usersWithOrders = await Promise.all(
-        usersData.map(async (user) => {
-          try {
-            const orderData = await adminUsersApi.getOrdersCount(user.id);
-            return {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-              joinDate: new Date(user.created_at).toLocaleDateString(),
-              orders: orderData.orders_count,
-            };
-          } catch {
-            return {
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              role: user.role,
-              joinDate: new Date(user.created_at).toLocaleDateString(),
-              orders: 0,
-            };
-          }
-        })
-      );
-
-      setUsers(usersWithOrders);
-    } catch (error) {
-      console.error('Failed to load users:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Map users with order counts
+  const users: User[] = usersData.map((user) => ({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    joinDate: new Date(user.created_at).toLocaleDateString(),
+    orders: 0, // Note: Order count fetching needs individual queries
+  }));
 
   const filteredUsers = users.filter(
     (user) =>

@@ -1,21 +1,20 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Leaf, Shield, Heart, Sparkles, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
-import { productsApi, categoriesApi, adminPartnersApi } from '@/lib/api/api';
+import { useBestSellers, useCategories, usePartners } from '@/lib/hooks/useQueries';
 import {
   AnimatedHero,
   AnimatedSection,
   AnimatedProductGrid,
   AnimatedCategoryGrid,
-  AnimatedPartnerGrid,
   AnimatedTestimonialGrid,
   AnimatedSocialGrid
 } from '@/components/AnimatedComponents';
-
-// Disable static generation since we need backend API at build time
-export const dynamic = 'force-dynamic';
+import { PartnersCarousel } from '@/components/PartnersCarousel';
 
 // Testimonials are kept as static content since they don't change frequently
 const testimonials = [
@@ -42,37 +41,41 @@ const testimonials = [
   },
 ];
 
-export default async function HomePage() {
-  // Fetch data with error handling
-  let bestSellers: any[] = [];
-  let categories: any[] = [];
-  let partners: any[] = [];
-
-  try {
-    const results = await Promise.allSettled([
-      productsApi.getBestSellers(),
-      categoriesApi.getAll(),
-      adminPartnersApi.getAll()
-    ]);
-
-    if (results[0].status === 'fulfilled') {
-      bestSellers = results[0].value;
-    }
-    if (results[1].status === 'fulfilled') {
-      categories = results[1].value;
-    }
-    if (results[2].status === 'fulfilled') {
-      partners = results[2].value;
-    }
-  } catch (error) {
-    console.error('Error fetching homepage data:', error);
-    // Continue rendering with empty data
-  }
+export default function HomePage() {
+  // Fetch data with TanStack Query
+  const { data: bestSellers = [] } = useBestSellers();
+  const { data: categories = [] } = useCategories();
+  const { data: partners } = usePartners();
 
   return (
     <div>
       {/* Hero Section - GoodWipes Style */}
-      <section className="relative bg-gradient-to-br from-primary-50 via-cyan-50 to-blue-50 overflow-hidden min-h-[80vh] flex items-center justify-center w-full">
+      <section className="relative bg-gradient-to-br from-primary-50 via-cyan-50 to-blue-50 overflow-hidden min-h-[100vh] flex items-center justify-center w-full">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1920&h=1080&fit=crop"
+            alt="Cleaning wipes background"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+        </div>
+        {/* Curved Bottom Edge */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gray-50 z-0">
+          <svg
+            className="absolute top-0 w-full h-24"
+            viewBox="0 0 1440 100"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0,0 C480,100 960,100 1440,0 L1440,100 L0,100 Z"
+              className="fill-gray-50"
+            />
+          </svg>
+        </div>
         <AnimatedHero>
           <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div className="relative flex items-center justify-center">
@@ -170,7 +173,7 @@ export default async function HomePage() {
               Available At
             </h2>
           </AnimatedSection>
-          <AnimatedPartnerGrid partners={partners} />
+          <PartnersCarousel partners={partners || []} />
         </div>
       </section>
 

@@ -218,6 +218,17 @@ export const adminUsersApi = {
   },
 };
 
+// Public Partners API
+export const partnersApi = {
+  getAll: async (): Promise<PartnerRead[]> => {
+    return apiClient.get<PartnerRead[]>('/partners');
+  },
+
+  getById: async (id: string): Promise<PartnerRead> => {
+    return apiClient.get<PartnerRead>(`/partners/${id}`);
+  },
+};
+
 // Admin Partners API
 export const adminPartnersApi = {
   getAll: async (): Promise<PartnerRead[]> => {

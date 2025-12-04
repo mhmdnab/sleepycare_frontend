@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { adminProductsApi, categoriesApi } from '@/lib/api/api';
 import { ProductRead, CategoryRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
+import { useAdminProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useCategories } from '@/lib/hooks/useQueries';
 
 interface Product {
   id: string;
@@ -21,9 +21,12 @@ interface Product {
 }
 
 export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<CategoryRead[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: productsData = [], isLoading: loading } = useAdminProducts();
+  const { data: categories = [] } = useCategories();
+  const createProduct = useCreateProduct();
+  const updateProduct = useUpdateProduct();
+  const deleteProduct = useDeleteProduct();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -38,42 +41,18 @@ export default function AdminProductsPage() {
     category_id: ''
   });
 
-  useEffect(() => {
-    loadProducts();
-    loadCategories();
-  }, []);
-
-  const loadCategories = async () => {
-    try {
-      const data = await categoriesApi.getAll();
-      setCategories(data);
-    } catch (error) {
-      console.error('Failed to load categories:', error);
-    }
-  };
-
-  const loadProducts = async () => {
-    try {
-      const data = await adminProductsApi.getAll();
-      // Map backend data to include image and category fields
-      const mappedData: Product[] = data.map((p: ProductRead) => ({
-        id: p.id,
-        name: p.name,
-        description: p.description,
-        price: p.price,
-        stock: p.stock,
-        image_url: p.image_url,
-        category_id: p.category_id,
-        image: p.image_url || '/placeholder-product.jpg',
-        category: p.category_id || '',
-      }));
-      setProducts(mappedData);
-    } catch (error) {
-      console.error('Failed to load products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Map backend data to include image and category fields
+  const products: Product[] = productsData.map((p: ProductRead) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    price: p.price,
+    stock: p.stock,
+    image_url: p.image_url,
+    category_id: p.category_id,
+    image: p.image_url || '/placeholder-product.jpg',
+    category: p.category_id || '',
+  }));
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -122,8 +101,7 @@ export default function AdminProductsPage() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this product?')) {
       try {
-        await adminProductsApi.delete(id);
-        await loadProducts();
+        await deleteProduct.mutateAsync(id);
       } catch (error) {
         console.error('Failed to delete product:', error);
         alert('Failed to delete product');
@@ -135,16 +113,19 @@ export default function AdminProductsPage() {
     e.preventDefault();
     try {
       if (editingProduct) {
-        await adminProductsApi.update(editingProduct.id, {
-          name: formData.name,
-          description: formData.description || null,
-          price: formData.price,
-          stock: formData.stock,
-          image_url: formData.image_url || null,
-          category_id: formData.category_id || null
+        await updateProduct.mutateAsync({
+          id: editingProduct.id,
+          data: {
+            name: formData.name,
+            description: formData.description || null,
+            price: formData.price,
+            stock: formData.stock,
+            image_url: formData.image_url || null,
+            category_id: formData.category_id || null
+          }
         });
       } else {
-        await adminProductsApi.create({
+        await createProduct.mutateAsync({
           name: formData.name,
           description: formData.description || null,
           price: formData.price,
@@ -153,7 +134,6 @@ export default function AdminProductsPage() {
           category_id: formData.category_id || null
         });
       }
-      await loadProducts();
       setShowModal(false);
     } catch (error) {
       console.error('Failed to save product:', error);

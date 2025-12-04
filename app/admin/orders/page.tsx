@@ -1,37 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Eye, Search } from 'lucide-react';
-import { adminOrdersApi } from '@/lib/api/api';
 import { OrderRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
+import { useAdminOrders, useUpdateOrder } from '@/lib/hooks/useQueries';
 
 interface Order extends OrderRead {
   id: string;
 }
 
 export default function AdminOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: orders = [], isLoading: loading } = useAdminOrders();
+  const updateOrder = useUpdateOrder();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  const loadOrders = async () => {
-    try {
-      const data = await adminOrdersApi.getAll();
-      setOrders(data);
-    } catch (error) {
-      console.error('Failed to load orders:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleViewOrder = (order: Order) => {
     setSelectedOrder(order);
@@ -40,8 +26,7 @@ export default function AdminOrdersPage() {
 
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     try {
-      await adminOrdersApi.update(orderId, { status: newStatus });
-      await loadOrders();
+      await updateOrder.mutateAsync({ id: orderId, data: { status: newStatus } });
       setShowModal(false);
     } catch (error) {
       console.error('Failed to update order status:', error);

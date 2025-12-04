@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { categoriesApi, adminCategoriesApi } from '@/lib/api/api';
 import { CategoryRead } from '@/lib/api/types';
+import { useCategories, useCreateCategory, useUpdateCategory, useDeleteCategory } from '@/lib/hooks/useQueries';
 
 interface Category {
   id: string;
@@ -14,8 +14,11 @@ interface Category {
 }
 
 export default function AdminCategoriesPage() {
-  const [categoryList, setCategoryList] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: categoryList = [], isLoading: loading } = useCategories();
+  const createCategory = useCreateCategory();
+  const updateCategory = useUpdateCategory();
+  const deleteCategory = useDeleteCategory();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
@@ -34,21 +37,6 @@ export default function AdminCategoriesPage() {
         setFormData({ ...formData, icon: base64String });
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  useEffect(() => {
-    loadCategories();
-  }, []);
-
-  const loadCategories = async () => {
-    try {
-      const data = await categoriesApi.getAll();
-      setCategoryList(data);
-    } catch (error) {
-      console.error('Failed to load categories:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -75,8 +63,7 @@ export default function AdminCategoriesPage() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this category?')) {
       try {
-        await adminCategoriesApi.delete(id);
-        await loadCategories();
+        await deleteCategory.mutateAsync(id);
       } catch (error) {
         console.error('Failed to delete category:', error);
         alert('Failed to delete category');
@@ -89,19 +76,21 @@ export default function AdminCategoriesPage() {
 
     try {
       if (editingCategory) {
-        await adminCategoriesApi.update(editingCategory.id, {
-          name: formData.name,
-          description: formData.description || null,
-          icon: formData.icon || null,
+        await updateCategory.mutateAsync({
+          id: editingCategory.id,
+          data: {
+            name: formData.name,
+            description: formData.description || null,
+            icon: formData.icon || null,
+          }
         });
       } else {
-        await adminCategoriesApi.create({
+        await createCategory.mutateAsync({
           name: formData.name,
           description: formData.description || null,
           icon: formData.icon || null,
         });
       }
-      await loadCategories();
       setShowModal(false);
       setFormData({ name: '', description: '', icon: '' });
     } catch (error) {

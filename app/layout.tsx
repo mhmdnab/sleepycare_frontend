@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sofia_Sans, Pacifico } from "next/font/google";
 import "./globals.css";
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 
 const sofiaSans = Sofia_Sans({ subsets: ["latin"], variable: '--font-sofia-sans' });
 const pacifico = Pacifico({
@@ -22,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sofiaSans.variable} ${pacifico.variable} font-sans antialiased`}>
-        {children}
+        <QueryProvider>
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

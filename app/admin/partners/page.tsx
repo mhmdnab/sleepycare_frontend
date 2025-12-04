@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { adminPartnersApi } from '@/lib/api/api';
+import { usePartners, useCreatePartner, useUpdatePartner, useDeletePartner } from '@/lib/hooks/useQueries';
 import { PartnerRead } from '@/lib/api/types';
 
 interface Partner {
@@ -13,14 +13,17 @@ interface Partner {
 }
 
 export default function AdminPartnersPage() {
-  const [partnerList, setPartnerList] = useState<Partner[]>([]);
+  const { data: partnerList = [], isLoading: loading } = usePartners();
+  const createPartner = useCreatePartner();
+  const updatePartner = useUpdatePartner();
+  const deletePartner = useDeletePartner();
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
   const [formData, setFormData] = useState({ name: '', icon: '' });
-  const [loading, setLoading] = useState(true);
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -33,21 +36,6 @@ export default function AdminPartnersPage() {
         setFormData({ ...formData, icon: base64String });
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  useEffect(() => {
-    loadPartners();
-  }, []);
-
-  const loadPartners = async () => {
-    try {
-      const data = await adminPartnersApi.getAll();
-      setPartnerList(data);
-    } catch (error) {
-      console.error('Failed to load partners:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -74,8 +62,7 @@ export default function AdminPartnersPage() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this partner?')) {
       try {
-        await adminPartnersApi.delete(id);
-        await loadPartners();
+        await deletePartner.mutateAsync(id);
       } catch (error) {
         console.error('Failed to delete partner:', error);
         alert('Failed to delete partner');
@@ -88,17 +75,19 @@ export default function AdminPartnersPage() {
 
     try {
       if (editingPartner) {
-        await adminPartnersApi.update(editingPartner.id, {
-          name: formData.name,
-          icon: formData.icon,
+        await updatePartner.mutateAsync({
+          id: editingPartner.id,
+          data: {
+            name: formData.name,
+            icon: formData.icon,
+          },
         });
       } else {
-        await adminPartnersApi.create({
+        await createPartner.mutateAsync({
           name: formData.name,
           icon: formData.icon,
         });
       }
-      await loadPartners();
       setShowModal(false);
       setFormData({ name: '', icon: '' });
     } catch (error) {

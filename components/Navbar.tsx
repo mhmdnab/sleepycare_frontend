@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cart';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { categoriesApi } from '@/lib/api/api';
+import { useCategories } from '@/lib/hooks/useQueries';
 import { Button } from './ui/Button';
 import { CartDrawer } from './CartDrawer';
 
@@ -16,26 +16,13 @@ export function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [categories, setCategories] = useState<any[]>([]);
+  const { data: categories = [] } = useCategories();
   const userMenuRef = useRef<HTMLDivElement>(null);
   const categoriesRef = useRef<HTMLDivElement>(null);
   const getTotalItems = useCartStore((state) => state.getTotalItems);
   const { user, isAuthenticated, logout } = useAuth();
 
   const totalItems = getTotalItems();
-
-  // Fetch categories
-  useEffect(() => {
-    const loadCategories = async () => {
-      try {
-        const data = await categoriesApi.getAll();
-        setCategories(data);
-      } catch (error) {
-        console.error('Failed to load categories:', error);
-      }
-    };
-    loadCategories();
-  }, []);
 
   // Close menus when clicking outside
   useEffect(() => {
