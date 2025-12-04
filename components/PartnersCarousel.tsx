@@ -1,13 +1,11 @@
 'use client';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
 
 // Import Swiper styles
 import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
 
 interface Partner {
   id: string;
@@ -35,18 +33,14 @@ export function PartnersCarousel({ partners }: { partners: Partner[] }) {
       className="w-full"
     >
       <Swiper
-        modules={[Autoplay, Pagination, Navigation]}
+        modules={[Autoplay]}
         spaceBetween={30}
         slidesPerView={2}
-        loop={partners.length > 4}
+        loop={true}
         autoplay={{
-          delay: 3000,
+          delay: 2500,
           disableOnInteraction: false,
         }}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
         breakpoints={{
           640: {
             slidesPerView: 3,
@@ -61,7 +55,7 @@ export function PartnersCarousel({ partners }: { partners: Partner[] }) {
             slidesPerView: 6,
           },
         }}
-        className="partners-swiper pb-12"
+        className="partners-swiper"
       >
         {partners.map((partner, index) => (
           <SwiperSlide key={partner.id || index}>
@@ -80,33 +74,6 @@ export function PartnersCarousel({ partners }: { partners: Partner[] }) {
           </SwiperSlide>
         ))}
       </Swiper>
-
-      <style jsx global>{`
-        .partners-swiper .swiper-button-next,
-        .partners-swiper .swiper-button-prev {
-          color: #0891b2;
-          background: white;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .partners-swiper .swiper-button-next:after,
-        .partners-swiper .swiper-button-prev:after {
-          font-size: 18px;
-          font-weight: bold;
-        }
-
-        .partners-swiper .swiper-pagination-bullet {
-          background: #0891b2;
-          opacity: 0.5;
-        }
-
-        .partners-swiper .swiper-pagination-bullet-active {
-          opacity: 1;
-        }
-      `}</style>
     </motion.div>
   );
 }

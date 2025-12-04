@@ -31,6 +31,7 @@ export const useProducts = () => {
   return useQuery({
     queryKey: ['products'],
     queryFn: () => productsApi.getAll(),
+    staleTime: 10 * 60 * 1000, // 10 minutes - products don't change often
   });
 };
 
@@ -54,6 +55,7 @@ export const useBestSellers = () => {
   return useQuery({
     queryKey: ['products', 'best-sellers'],
     queryFn: () => productsApi.getBestSellers(),
+    staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
@@ -113,6 +115,7 @@ export const useCategories = () => {
   return useQuery({
     queryKey: ['categories'],
     queryFn: () => categoriesApi.getAll(),
+    staleTime: 15 * 60 * 1000, // 15 minutes - categories rarely change
   });
 };
 
@@ -259,6 +262,7 @@ export const usePartners = () => {
   return useQuery({
     queryKey: ['partners'],
     queryFn: () => partnersApi.getAll(),
+    staleTime: 15 * 60 * 1000, // 15 minutes - partners rarely change
   });
 };
 
