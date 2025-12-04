@@ -10,6 +10,10 @@ class ApiClient {
 
   constructor(baseURL: string) {
     this.baseURL = baseURL;
+    this.loadToken();
+  }
+
+  private loadToken() {
     if (typeof window !== 'undefined') {
       this.token = localStorage.getItem('token');
     }
@@ -34,6 +38,11 @@ class ApiClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
+    // Ensure token is loaded from localStorage
+    if (typeof window !== 'undefined' && !this.token) {
+      this.loadToken();
+    }
+
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
     };
@@ -57,7 +66,8 @@ class ApiClient {
       const error: ApiError = await response.json().catch(() => ({
         detail: 'An error occurred',
       }));
-	  console.error('API Error:', error);
+      console.error('API Error:', error);
+      throw new Error(error.detail || `HTTP ${response.status}`);
     }
 
     // Handle 204 No Content

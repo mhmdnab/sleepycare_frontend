@@ -131,7 +131,20 @@ export default function AdminPartnersPage() {
               className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
             >
               <div className="text-center mb-4">
-                <div className="text-4xl mb-3">{partner.icon}</div>
+                <div className="flex justify-center items-center mb-3 h-20">
+                  {partner.icon ? (
+                    <img
+                      src={partner.icon}
+                      alt={partner.name}
+                      className="max-h-full max-w-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=No+Logo';
+                      }}
+                    />
+                  ) : (
+                    <div className="text-4xl text-gray-400">🏢</div>
+                  )}
+                </div>
                 <h3 className="font-semibold text-gray-900 text-lg">
                   {partner.name}
                 </h3>
@@ -185,20 +198,20 @@ export default function AdminPartnersPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Icon (Emoji)
+                    Logo Image URL
                   </label>
                   <input
-                    type="text"
+                    type="url"
                     value={formData.icon}
                     onChange={(e) =>
                       setFormData({ ...formData, icon: e.target.value })
                     }
-                    placeholder="e.g., 👶"
+                    placeholder="https://example.com/partner-logo.png"
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    Use an emoji to represent this partner
+                    Enter the URL of the partner's logo image
                   </p>
                 </div>
                 <div className="flex justify-end space-x-3 pt-4">

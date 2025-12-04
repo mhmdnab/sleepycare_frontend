@@ -74,7 +74,7 @@ export function Navbar() {
 
               {/* User Menu - Desktop */}
               <div className="hidden md:block relative">
-                {isAuthenticated && user ? (
+                {isAuthenticated && user && user.role !== 'admin' ? (
                   <>
                     <button
                       onClick={() => setUserMenuOpen(!userMenuOpen)}
@@ -90,15 +90,6 @@ export function Navbar() {
                           <p className="text-sm font-medium text-gray-900">{user.name}</p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
-                        {user.role === 'admin' && (
-                          <Link
-                            href="/admin"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setUserMenuOpen(false)}
-                          >
-                            Admin Dashboard
-                          </Link>
-                        )}
                         <button
                           onClick={handleLogout}
                           className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
@@ -166,21 +157,12 @@ export function Navbar() {
               </Link>
 
               {/* Mobile User Menu */}
-              {isAuthenticated && user ? (
+              {isAuthenticated && user && user.role !== 'admin' ? (
                 <div className="border-t pt-3 mt-3 space-y-2">
                   <div className="py-2">
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
                     <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
-                  {user.role === 'admin' && (
-                    <Link
-                      href="/admin"
-                      className="block py-2 text-gray-700 hover:text-primary-600"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Admin Dashboard
-                    </Link>
-                  )}
                   <button
                     onClick={() => {
                       handleLogout();

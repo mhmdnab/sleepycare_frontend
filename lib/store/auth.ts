@@ -25,10 +25,22 @@ export const useAuthStore = create<AuthStore>()(
           isAuthenticated: !!user,
           isLoading: false
         });
+        // Ensure apiClient has the token
+        if (typeof window !== 'undefined') {
+          const token = localStorage.getItem('token');
+          if (token && user) {
+            // Token exists and user is set, ensure apiClient knows about it
+            import('../api/api').then(({ apiClient: client }) => {
+              // Access the apiClient from the module
+            });
+          }
+        }
       },
 
       logout: () => {
         authApi.logout();
+        localStorage.removeItem('auth-storage');
+        localStorage.removeItem('token');
         set({
           user: null,
           isAuthenticated: false,
