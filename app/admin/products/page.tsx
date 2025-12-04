@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
-import { adminProductsApi } from '@/lib/api/api';
-import { ProductRead } from '@/lib/api/types';
+import { adminProductsApi, categoriesApi } from '@/lib/api/api';
+import { ProductRead, CategoryRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
 
 interface Product {
@@ -22,6 +22,7 @@ interface Product {
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<CategoryRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -37,7 +38,17 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     loadProducts();
+    loadCategories();
   }, []);
+
+  const loadCategories = async () => {
+    try {
+      const data = await categoriesApi.getAll();
+      setCategories(data);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
+  };
 
   const loadProducts = async () => {
     try {
@@ -289,15 +300,20 @@ export default function AdminProductsPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Category ID
+                      Category
                     </label>
-                    <input
-                      type="text"
+                    <select
                       value={formData.category_id}
                       onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                      placeholder="Category ID"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-                    />
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none bg-white"
+                    >
+                      <option value="">Select a category (optional)</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.icon && `${category.icon} `}{category.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
