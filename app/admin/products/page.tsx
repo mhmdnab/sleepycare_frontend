@@ -27,6 +27,8 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -73,8 +75,24 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setImagePreview(base64String);
+        setFormData({ ...formData, image_url: base64String });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleAdd = () => {
     setEditingProduct(null);
+    setImageFile(null);
+    setImagePreview('');
     setFormData({
       name: '',
       description: '',
@@ -88,6 +106,8 @@ export default function AdminProductsPage() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
+    setImageFile(null);
+    setImagePreview(product.image_url || '');
     setFormData({
       name: product.name,
       description: product.description || '',
@@ -345,15 +365,36 @@ export default function AdminProductsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Image URL
+                    Product Image
                   </label>
-                  <input
-                    type="url"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-                  />
+                  <div className="space-y-3">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                    />
+                    <div className="text-center text-sm text-gray-500">or</div>
+                    <input
+                      type="url"
+                      value={formData.image_url}
+                      onChange={(e) => {
+                        setFormData({ ...formData, image_url: e.target.value });
+                        setImagePreview(e.target.value);
+                      }}
+                      placeholder="Enter image URL"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
+                    />
+                    {imagePreview && (
+                      <div className="mt-2">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
