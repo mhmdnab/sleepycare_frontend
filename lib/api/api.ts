@@ -22,6 +22,9 @@ import {
 } from './types';
 import { Product } from '../store/cart';
 
+// Export apiClient for use in other modules
+export { apiClient };
+
 // Helper function to convert backend ProductRead to frontend Product
 const toFrontendProduct = (product: ProductRead): Product => ({
   id: product.id,
