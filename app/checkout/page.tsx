@@ -20,7 +20,7 @@ export default function CheckoutPage() {
   const [orderSuccess, setOrderSuccess] = useState(false);
 
   const [shippingInfo, setShippingInfo] = useState({
-    fullName: user?.full_name || '',
+    fullName: user?.name || '',
     email: user?.email || '',
     phone: '',
     address: '',
