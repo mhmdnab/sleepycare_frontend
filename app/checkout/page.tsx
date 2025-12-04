@@ -126,12 +126,8 @@ export default function CheckoutPage() {
         items: items.map(item => ({
           product_id: item.id,
           quantity: item.quantity,
-          price: item.price
-        })),
-        total_amount: finalTotal,
-        status: 'pending',
-        shipping_address: `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.state} ${shippingInfo.zipCode}, ${shippingInfo.country}`,
-        phone: shippingInfo.phone
+          unit_price: item.price
+        }))
       };
 
       const order = await ordersApi.create(orderData);
