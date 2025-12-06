@@ -16,11 +16,13 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => {
-      // Register the token expired callback
-      setOnTokenExpired(() => {
-        const { logout } = get();
-        logout();
-      });
+      // Register the token expired callback (only on client side)
+      if (typeof window !== 'undefined') {
+        setOnTokenExpired(() => {
+          const { logout } = get();
+          logout();
+        });
+      }
 
       return {
         user: null,
@@ -37,8 +39,10 @@ export const useAuthStore = create<AuthStore>()(
 
         logout: () => {
           authApi.logout();
-          localStorage.removeItem('auth-storage');
-          localStorage.removeItem('token');
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('auth-storage');
+            localStorage.removeItem('token');
+          }
           set({
             user: null,
             isAuthenticated: false,
@@ -56,8 +60,10 @@ export const useAuthStore = create<AuthStore>()(
             });
           } catch {
             // Token is invalid or expired - clear auth state
-            localStorage.removeItem('auth-storage');
-            localStorage.removeItem('token');
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('auth-storage');
+              localStorage.removeItem('token');
+            }
             set({
               user: null,
               isAuthenticated: false,
