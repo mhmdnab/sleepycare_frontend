@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay } from 'swiper/modules';
-import { motion } from 'framer-motion';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
+import { motion } from "framer-motion";
 
 // Import Swiper styles
-import 'swiper/css';
+import "swiper/css";
 
 interface Partner {
   id: string;
@@ -14,12 +14,12 @@ interface Partner {
 }
 
 export function PartnersCarousel({ partners }: { partners: Partner[] }) {
-  console.log('PartnersCarousel - partners:', partners);
+  console.log("PartnersCarousel - partners:", partners);
 
   if (!partners || partners.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No partners available at the moment.</p>
+        <p className="text-gray-500">Loading...</p>
       </div>
     );
   }
@@ -63,12 +63,14 @@ export function PartnersCarousel({ partners }: { partners: Partner[] }) {
               <div className="flex flex-col items-center justify-center space-y-3 h-full">
                 {partner.icon && (
                   <img
-                    src={partner.icon || '/placeholder-partner.png'}
+                    src={partner.icon || "/placeholder-partner.png"}
                     alt={partner.name}
                     className="h-16 w-auto object-contain"
                   />
-                ) }
-                <p className="text-sm font-medium text-gray-700 text-center">{partner.name}</p>
+                )}
+                <p className="text-sm font-medium text-gray-700 text-center">
+                  {partner.name}
+                </p>
               </div>
             </div>
           </SwiperSlide>

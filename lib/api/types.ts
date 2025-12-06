@@ -80,8 +80,8 @@ export interface CategoryUpdate {
 // Order Types
 export interface OrderItemCreate {
   product_id: string;
-  quantity: number;
-  unit_price: number;
+  quantity: number; // Must be >= 1
+  unit_price: number; // Must be >= 0
 }
 
 export interface OrderItemRead {
@@ -99,7 +99,7 @@ export interface OrderRead {
   user_id: string;
   status: string;
   total_amount: number;
-  created_at: string;
+  created_at: string; // ISO 8601 datetime string
   items: OrderItemRead[];
 }
 

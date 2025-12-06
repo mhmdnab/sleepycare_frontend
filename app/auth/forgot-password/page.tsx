@@ -14,11 +14,29 @@ export default function ForgotPasswordPage() {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Call backend forgot-password endpoint
+      // Backend will generate a token, create password reset doc, and send email via Resend
+      const backendResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/forgot-password`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        }
+      );
 
-    setSubmitted(true);
-    setLoading(false);
+      if (backendResponse.ok || backendResponse.status === 204) {
+        setSubmitted(true);
+      } else {
+        alert('Failed to send reset email. Please try again.');
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      alert('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
