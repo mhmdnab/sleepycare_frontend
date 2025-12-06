@@ -189,11 +189,11 @@ export default function OrdersPage() {
                             Product ID: {item.product_id.slice(0, 8)}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Quantity: {item.quantity} × {formatPrice(item.price)}
+                            Quantity: {item.quantity} × {formatPrice(item.unit_price)}
                           </p>
                         </div>
                         <p className="font-semibold text-gray-900">
-                          {formatPrice(item.quantity * item.price)}
+                          {formatPrice(item.quantity * item.unit_price)}
                         </p>
                       </div>
                     ))}
