@@ -1,4 +1,4 @@
-const API_URL = 'https://sleepycare-backend.onrender.com';
+const API_URL = "https://sleepycare-backend.onrender.com";
 
 export interface ApiError {
   detail: string;
@@ -14,18 +14,18 @@ class ApiClient {
   }
 
   private loadToken() {
-    if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('token');
+    if (typeof window !== "undefined") {
+      this.token = localStorage.getItem("token");
     }
   }
 
   setToken(token: string | null) {
     this.token = token;
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       if (token) {
-        localStorage.setItem('token', token);
+        localStorage.setItem("token", token);
       } else {
-        localStorage.removeItem('token');
+        localStorage.removeItem("token");
       }
     }
   }
@@ -39,16 +39,16 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     // Ensure token is loaded from localStorage
-    if (typeof window !== 'undefined' && !this.token) {
+    if (typeof window !== "undefined" && !this.token) {
       this.loadToken();
     }
 
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers["Authorization"] = `Bearer ${this.token}`;
     }
 
     // Merge with any additional headers
@@ -64,10 +64,9 @@ class ApiClient {
 
     if (!response.ok) {
       const error: ApiError = await response.json().catch(() => ({
-        detail: 'An error occurred',
+        detail: "An error occurred",
       }));
-      console.error('API Error:', error);
-      throw new Error(error.detail || `HTTP ${response.status}`);
+      console.error("API Error:", error);
     }
 
     // Handle 204 No Content
@@ -79,52 +78,55 @@ class ApiClient {
   }
 
   async get<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET' });
+    return this.request<T>(endpoint, { method: "GET" });
   }
 
   async post<T>(endpoint: string, data?: any): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   async put<T>(endpoint: string, data?: any): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
 
   async delete<T>(endpoint: string): Promise<T> {
-    return this.request<T>(endpoint, { method: 'DELETE' });
+    return this.request<T>(endpoint, { method: "DELETE" });
   }
 
   // Form data for login (OAuth2PasswordRequestForm)
-  async postForm<T>(endpoint: string, data: Record<string, string>): Promise<T> {
+  async postForm<T>(
+    endpoint: string,
+    data: Record<string, string>
+  ): Promise<T> {
     const formData = new URLSearchParams();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
     });
 
     const headers: Record<string, string> = {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      "Content-Type": "application/x-www-form-urlencoded",
     };
 
     if (this.token) {
-      headers['Authorization'] = `Bearer ${this.token}`;
+      headers["Authorization"] = `Bearer ${this.token}`;
     }
 
     const url = `${this.baseURL}${endpoint}`;
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers,
       body: formData,
     });
 
     if (!response.ok) {
       const error: ApiError = await response.json().catch(() => ({
-        detail: 'An error occurred',
+        detail: "An error occurred",
       }));
       throw new Error(error.detail || `HTTP ${response.status}`);
     }

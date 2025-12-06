@@ -125,32 +125,47 @@ export function Navbar() {
 
               {/* User Menu - Desktop */}
               <div className="hidden md:block relative" ref={userMenuRef}>
-                {isAuthenticated && user && user.role !== 'admin' ? (
-                  <>
-                    <button
-                      onClick={() => setUserMenuOpen(!userMenuOpen)}
-                      className="flex items-center space-x-2 text-gray-700 hover:text-primary-600"
-                    >
-                      <User className="w-5 h-5" />
-                      <span className="text-sm">{user.name}</span>
-                    </button>
+                {isAuthenticated && user ? (
+                  user.role === 'admin' ? (
+                    <div className="flex items-center space-x-2">
+                      <Link href="/admin">
+                        <Button size="sm" variant="secondary">Admin</Button>
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center space-x-1 text-gray-700 hover:text-primary-600"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span className="text-sm">Logout</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setUserMenuOpen(!userMenuOpen)}
+                        className="flex items-center space-x-2 text-gray-700 hover:text-primary-600"
+                      >
+                        <User className="w-5 h-5" />
+                        <span className="text-sm">{user.name}</span>
+                      </button>
 
-                    {userMenuOpen && (
-                      <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                        <div className="px-4 py-2 border-b">
-                          <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                          <p className="text-xs text-gray-500">{user.email}</p>
+                      {userMenuOpen && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                          <div className="px-4 py-2 border-b">
+                            <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                            <p className="text-xs text-gray-500">{user.email}</p>
+                          </div>
+                          <button
+                            onClick={handleLogout}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Logout</span>
+                          </button>
                         </div>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
-                        >
-                          <LogOut className="w-4 h-4" />
-                          <span>Logout</span>
-                        </button>
-                      </div>
-                    )}
-                  </>
+                      )}
+                    </>
+                  )
                 ) : (
                   <Link href="/auth/login">
                     <Button size="sm">Login</Button>
@@ -218,22 +233,43 @@ export function Navbar() {
               </Link>
 
               {/* Mobile User Menu */}
-              {isAuthenticated && user && user.role !== 'admin' ? (
-                <div className="border-t pt-3 mt-3 space-y-2">
-                  <div className="py-2">
-                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
+              {isAuthenticated && user ? (
+                user.role === 'admin' ? (
+                  <div className="space-y-2">
+                    <Link
+                      href="/admin"
+                      className="block py-2 text-primary-600 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full text-left py-2 text-red-600 font-medium"
+                    >
+                      Logout
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="block w-full text-left py-2 text-red-600 font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
+                ) : (
+                  <div className="border-t pt-3 mt-3 space-y-2">
+                    <div className="py-2">
+                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full text-left py-2 text-red-600 font-medium"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )
               ) : (
                 <Link
                   href="/auth/login"
