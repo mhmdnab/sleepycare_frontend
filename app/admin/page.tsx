@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Package, ShoppingCart, Users, DollarSign } from 'lucide-react';
-import { productsApi, ordersApi, usersApi } from '@/lib/api/api';
+import { adminOrdersApi, adminProductsApi, adminUsersApi } from '@/lib/api/api';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -14,18 +14,24 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const loadStats = async () => {
-      const products = await productsApi.getAll();
-      const orders = await ordersApi.getAll();
-      const users = await usersApi.getAll();
+      try {
+        const [products, orders, users] = await Promise.all([
+          adminProductsApi.getAll(),
+          adminOrdersApi.getAll(),
+          adminUsersApi.getAll(),
+        ]);
 
-      const revenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
+        const revenue = orders.reduce((sum, order) => sum + order.total_amount, 0);
 
-      setStats({
-        totalProducts: products.length,
-        totalOrders: orders.length,
-        totalUsers: users.length,
-        totalRevenue: revenue,
-      });
+        setStats({
+          totalProducts: products.length,
+          totalOrders: orders.length,
+          totalUsers: users.length,
+          totalRevenue: revenue,
+        });
+      } catch (error) {
+        console.error('Failed to load dashboard stats', error);
+      }
     };
     loadStats();
   }, []);
