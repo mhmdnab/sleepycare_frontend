@@ -4,6 +4,13 @@ export interface ApiError {
   detail: string;
 }
 
+// Token expiry handling callback
+let onTokenExpired: (() => void) | null = null;
+
+export function setOnTokenExpired(callback: () => void) {
+  onTokenExpired = callback;
+}
+
 class ApiClient {
   private baseURL: string;
   private token: string | null = null;
@@ -63,6 +70,15 @@ class ApiClient {
     });
 
     if (!response.ok) {
+      // Handle 401 Unauthorized - token expired or invalid
+      if (response.status === 401) {
+        this.setToken(null);
+        localStorage.removeItem('auth-storage');
+        if (onTokenExpired) {
+          onTokenExpired();
+        }
+      }
+
       const error: ApiError = await response.json().catch(() => ({
         detail: 'An error occurred',
       }));

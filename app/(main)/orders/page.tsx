@@ -3,14 +3,20 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Package, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
-import { useOrders } from '@/lib/hooks/useQueries';
+import { useOrders, useProducts } from '@/lib/hooks/useQueries';
 import { formatPrice } from '@/lib/utils';
 import { OrderRead } from '@/lib/api/types';
 
 export default function OrdersPage() {
   const { data: orders = [], isLoading } = useOrders();
+  const { data: products = [] } = useProducts();
   const [selectedOrder, setSelectedOrder] = useState<OrderRead | null>(null);
   const [showModal, setShowModal] = useState(false);
+
+  // Helper to get product details by ID
+  const getProduct = (productId: string) => {
+    return products.find(p => p.id === productId);
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
@@ -181,22 +187,35 @@ export default function OrdersPage() {
 
                 <div className="border-t border-gray-200 pt-4">
                   <h3 className="font-semibold text-gray-900 mb-3">Order Items</h3>
-                  <div className="space-y-3">
-                    {selectedOrder.items.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium text-gray-900">
-                            Product ID: {item.product_id.slice(0, 8)}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            Quantity: {item.quantity} × {formatPrice(item.unit_price)}
+                  <div className="space-y-4">
+                    {selectedOrder.items.map((item, index) => {
+                      const product = getProduct(item.product_id);
+                      return (
+                        <div key={index} className="flex items-center gap-4">
+                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                            <img
+                              src={product?.image || '/placeholder-product.jpg'}
+                              alt={product?.name || 'Product'}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 truncate">
+                              {product?.name || `Product #${item.product_id.slice(0, 8)}`}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              Qty: {item.quantity} × {formatPrice(item.unit_price)}
+                            </p>
+                          </div>
+                          <p className="font-semibold text-gray-900 flex-shrink-0">
+                            {formatPrice(item.quantity * item.unit_price)}
                           </p>
                         </div>
-                        <p className="font-semibold text-gray-900">
-                          {formatPrice(item.quantity * item.unit_price)}
-                        </p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
 

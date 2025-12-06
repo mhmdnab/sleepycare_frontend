@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingCart, Menu, X, User, LogOut, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Menu, X, User, LogOut, ChevronDown, Package, Settings } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cart';
@@ -141,13 +141,39 @@ export function Navbar() {
                           <p className="text-sm font-medium text-gray-900">{user.name}</p>
                           <p className="text-xs text-gray-500">{user.email}</p>
                         </div>
-                        <button
-                          onClick={handleLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                        <Link
+                          href="/profile"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
                         >
-                          <LogOut className="w-4 h-4" />
-                          <span>Logout</span>
-                        </button>
+                          <User className="w-4 h-4" />
+                          <span>My Profile</span>
+                        </Link>
+                        <Link
+                          href="/orders"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                        >
+                          <Package className="w-4 h-4" />
+                          <span>My Orders</span>
+                        </Link>
+                        <Link
+                          href="/profile?tab=settings"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                        >
+                          <Settings className="w-4 h-4" />
+                          <span>Settings</span>
+                        </Link>
+                        <div className="border-t mt-1 pt-1">
+                          <button
+                            onClick={handleLogout}
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                          >
+                            <LogOut className="w-4 h-4" />
+                            <span>Logout</span>
+                          </button>
+                        </div>
                       </div>
                     )}
                   </>
@@ -224,14 +250,39 @@ export function Navbar() {
                     <p className="text-sm font-medium text-gray-900">{user.name}</p>
                     <p className="text-xs text-gray-500">{user.email}</p>
                   </div>
+                  <Link
+                    href="/profile"
+                    className="block py-2 text-gray-700 hover:text-primary-600 flex items-center space-x-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <User className="w-4 h-4" />
+                    <span>My Profile</span>
+                  </Link>
+                  <Link
+                    href="/orders"
+                    className="block py-2 text-gray-700 hover:text-primary-600 flex items-center space-x-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Package className="w-4 h-4" />
+                    <span>My Orders</span>
+                  </Link>
+                  <Link
+                    href="/profile?tab=settings"
+                    className="block py-2 text-gray-700 hover:text-primary-600 flex items-center space-x-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Settings className="w-4 h-4" />
+                    <span>Settings</span>
+                  </Link>
                   <button
                     onClick={() => {
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left py-2 text-red-600 font-medium"
+                    className="block w-full text-left py-2 text-red-600 font-medium flex items-center space-x-2"
                   >
-                    Logout
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
                   </button>
                 </div>
               ) : (
