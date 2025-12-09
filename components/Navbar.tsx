@@ -184,13 +184,39 @@ export function Navbar() {
                               {user.email}
                             </p>
                           </div>
-                          <button
-                            onClick={handleLogout}
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                          <Link
+                            href="/profile"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
                           >
-                            <LogOut className="w-4 h-4" />
-                            <span>Logout</span>
-                          </button>
+                            <User className="w-4 h-4" />
+                            <span>My Profile</span>
+                          </Link>
+                          <Link
+                            href="/orders"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          >
+                            <Package className="w-4 h-4" />
+                            <span>My Orders</span>
+                          </Link>
+                          <Link
+                            href="/profile?tab=settings"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2"
+                          >
+                            <Settings className="w-4 h-4" />
+                            <span>Settings</span>
+                          </Link>
+                          <div className="border-t mt-1 pt-1">
+                            <button
+                              onClick={handleLogout}
+                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center space-x-2"
+                            >
+                              <LogOut className="w-4 h-4" />
+                              <span>Logout</span>
+                            </button>
+                          </div>
                         </div>
                       )}
                     </>

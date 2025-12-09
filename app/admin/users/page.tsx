@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { UserRead } from '@/lib/api/types';
-import { useAdminUsers, useUserOrdersCount } from '@/lib/hooks/useQueries';
+import { useAdminUsers } from '@/lib/hooks/useQueries';
 
 interface User {
   id: string;
@@ -25,7 +25,7 @@ export default function AdminUsersPage() {
     email: user.email,
     role: user.role,
     joinDate: new Date(user.created_at).toLocaleDateString(),
-    orders: 0, // Note: Order count fetching needs individual queries
+    orders: user.orders_count || 0,
   }));
 
   const filteredUsers = users.filter(

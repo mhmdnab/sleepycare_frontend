@@ -11,6 +11,7 @@ export interface UserRead {
   role: string;
   provider: string;
   created_at: string;
+  orders_count: number;
 }
 
 export interface UserCreate {
