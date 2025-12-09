@@ -145,6 +145,43 @@ export default function CheckoutPage() {
 
       await transactionsApi.create(transactionData);
 
+      // Send confirmation email
+      try {
+        await fetch('/api/orders/confirmation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            orderId: order.id,
+            customerName: shippingInfo.fullName,
+            customerEmail: shippingInfo.email,
+            items: items.map(item => ({
+              product_name: item.name,
+              quantity: item.quantity,
+              unit_price: item.price
+            })),
+            subtotal: total,
+            shipping: shippingCost,
+            tax: tax,
+            total: finalTotal,
+            paymentMethod: paymentMethod === 'cash' ? 'cash_on_delivery' : 'credit_card',
+            shippingAddress: {
+              fullName: shippingInfo.fullName,
+              address: shippingInfo.address,
+              city: shippingInfo.city,
+              state: shippingInfo.state,
+              zipCode: shippingInfo.zipCode,
+              country: shippingInfo.country,
+              phone: shippingInfo.phone
+            }
+          }),
+        });
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Don't fail the order if email fails
+      }
+
       // Clear cart and show success
       clearCart();
       setOrderSuccess(true);

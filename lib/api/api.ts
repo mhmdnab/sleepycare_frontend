@@ -1,4 +1,4 @@
-import { apiClient } from './client';
+import { apiClient } from "./client";
 import {
   ProductRead,
   ProductCreate,
@@ -19,8 +19,8 @@ import {
   PartnerRead,
   PartnerCreate,
   PartnerUpdate,
-} from './types';
-import { Product } from '../store/cart';
+} from "./types";
+import { Product } from "../store/cart";
 
 // Export apiClient for use in other modules
 export { apiClient };
@@ -30,22 +30,25 @@ const toFrontendProduct = (product: ProductRead): Product => ({
   id: product.id,
   name: product.name,
   price: product.price,
-  image: product.image_url || '/placeholder-product.jpg',
-  category: product.category_id || '',
-  description: product.description || '',
+  image: product.image_url || "/placeholder-product.jpg",
+  category: product.category_id || "",
+  description: product.description || "",
   stock: product.stock,
 });
 
 // Auth API
 export const authApi = {
   register: async (userData: UserCreate): Promise<TokenResponse> => {
-    const response = await apiClient.post<TokenResponse>('/auth/register', userData);
+    const response = await apiClient.post<TokenResponse>(
+      "/auth/register",
+      userData
+    );
     apiClient.setToken(response.access_token);
     return response;
   },
 
   login: async (email: string, password: string): Promise<TokenResponse> => {
-    const response = await apiClient.postForm<TokenResponse>('/auth/login', {
+    const response = await apiClient.postForm<TokenResponse>("/auth/login", {
       username: email,
       password: password,
     });
@@ -58,22 +61,22 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<UserRead> => {
-    return apiClient.get<UserRead>('/auth/me');
+    return apiClient.get<UserRead>("/auth/me");
   },
 
   forgotPassword: async (data: ForgotPasswordRequest): Promise<void> => {
-    await apiClient.post<void>('/auth/forgot-password', data);
+    await apiClient.post<void>("/auth/forgot-password", data);
   },
 
   resetPassword: async (data: ResetPasswordRequest): Promise<void> => {
-    await apiClient.post<void>('/auth/reset-password', data);
+    await apiClient.post<void>("/auth/reset-password", data);
   },
 };
 
 // Products API
 export const productsApi = {
   getAll: async (): Promise<Product[]> => {
-    const products = await apiClient.get<ProductRead[]>('/products');
+    const products = await apiClient.get<ProductRead[]>("/products");
     return products.map(toFrontendProduct);
   },
 
@@ -87,7 +90,9 @@ export const productsApi = {
   },
 
   getByCategory: async (categoryId: string): Promise<Product[]> => {
-    const products = await apiClient.get<ProductRead[]>(`/products/category/${categoryId}`);
+    const products = await apiClient.get<ProductRead[]>(
+      `/products/category/${categoryId}`
+    );
     return products.map(toFrontendProduct);
   },
 
@@ -96,7 +101,7 @@ export const productsApi = {
     const allProducts = await productsApi.getAll();
     const lowerQuery = query.toLowerCase();
     return allProducts.filter(
-      p =>
+      (p) =>
         p.name.toLowerCase().includes(lowerQuery) ||
         p.description.toLowerCase().includes(lowerQuery)
     );
@@ -113,14 +118,14 @@ export const productsApi = {
     if (!product || !product.category) return [];
 
     const categoryProducts = await productsApi.getByCategory(product.category);
-    return categoryProducts.filter(p => p.id !== productId).slice(0, 4);
+    return categoryProducts.filter((p) => p.id !== productId).slice(0, 4);
   },
 };
 
 // Categories API
 export const categoriesApi = {
   getAll: async (): Promise<CategoryRead[]> => {
-    return apiClient.get<CategoryRead[]>('/categories');
+    return apiClient.get<CategoryRead[]>("/categories");
   },
 
   getById: async (id: string): Promise<CategoryRead> => {
@@ -131,7 +136,7 @@ export const categoriesApi = {
 // Orders API
 export const ordersApi = {
   getAll: async (): Promise<OrderRead[]> => {
-    return apiClient.get<OrderRead[]>('/orders');
+    return apiClient.get<OrderRead[]>("/orders");
   },
 
   getById: async (id: string): Promise<OrderRead> => {
@@ -139,14 +144,16 @@ export const ordersApi = {
   },
 
   create: async (orderData: OrderCreate): Promise<OrderRead> => {
-    return apiClient.post<OrderRead>('/orders', orderData);
+    return apiClient.post<OrderRead>("/orders", orderData);
   },
 };
 
 // Transactions API
 export const transactionsApi = {
-  create: async (transactionData: TransactionCreate): Promise<TransactionRead> => {
-    return apiClient.post<TransactionRead>('/transactions', transactionData);
+  create: async (
+    transactionData: TransactionCreate
+  ): Promise<TransactionRead> => {
+    return apiClient.post<TransactionRead>("/transactions", transactionData);
   },
 
   getByOrderId: async (orderId: string): Promise<TransactionRead[]> => {
@@ -157,10 +164,13 @@ export const transactionsApi = {
 // Admin Categories API
 export const adminCategoriesApi = {
   create: async (categoryData: CategoryCreate): Promise<CategoryRead> => {
-    return apiClient.post<CategoryRead>('/admin/categories', categoryData);
+    return apiClient.post<CategoryRead>("/admin/categories", categoryData);
   },
 
-  update: async (id: string, categoryData: CategoryUpdate): Promise<CategoryRead> => {
+  update: async (
+    id: string,
+    categoryData: CategoryUpdate
+  ): Promise<CategoryRead> => {
     return apiClient.put<CategoryRead>(`/admin/categories/${id}`, categoryData);
   },
 
@@ -172,14 +182,17 @@ export const adminCategoriesApi = {
 // Admin Products API
 export const adminProductsApi = {
   getAll: async (): Promise<ProductRead[]> => {
-    return apiClient.get<ProductRead[]>('/products');
+    return apiClient.get<ProductRead[]>("/products");
   },
 
   create: async (productData: ProductCreate): Promise<ProductRead> => {
-    return apiClient.post<ProductRead>('/admin/products', productData);
+    return apiClient.post<ProductRead>("/admin/products", productData);
   },
 
-  update: async (id: string, productData: ProductUpdate): Promise<ProductRead> => {
+  update: async (
+    id: string,
+    productData: ProductUpdate
+  ): Promise<ProductRead> => {
     return apiClient.put<ProductRead>(`/admin/products/${id}`, productData);
   },
 
@@ -191,7 +204,7 @@ export const adminProductsApi = {
 // Admin Orders API
 export const adminOrdersApi = {
   getAll: async (): Promise<OrderRead[]> => {
-    return apiClient.get<OrderRead[]>('/admin/orders');
+    return apiClient.get<OrderRead[]>("/admin/orders");
   },
 
   getById: async (id: string): Promise<OrderRead> => {
@@ -206,22 +219,26 @@ export const adminOrdersApi = {
 // Admin Users API
 export const adminUsersApi = {
   getAll: async (): Promise<UserRead[]> => {
-    return apiClient.get<UserRead[]>('/admin/users');
+    return apiClient.get<UserRead[]>("/admin/users");
   },
 
   getById: async (id: string): Promise<UserRead> => {
     return apiClient.get<UserRead>(`/admin/users/${id}`);
   },
 
-  getOrdersCount: async (id: string): Promise<{ user_id: string; orders_count: number }> => {
-    return apiClient.get<{ user_id: string; orders_count: number }>(`/admin/users/${id}/orders-count`);
+  getOrdersCount: async (
+    id: string
+  ): Promise<{ user_id: string; orders_count: number }> => {
+    return apiClient.get<{ user_id: string; orders_count: number }>(
+      `/admin/users/${id}/orders-count`
+    );
   },
 };
 
 // Public Partners API
 export const partnersApi = {
   getAll: async (): Promise<PartnerRead[]> => {
-    return apiClient.get<PartnerRead[]>('/partners');
+    return apiClient.get<PartnerRead[]>("/partners");
   },
 
   getById: async (id: string): Promise<PartnerRead> => {
@@ -232,7 +249,7 @@ export const partnersApi = {
 // Admin Partners API
 export const adminPartnersApi = {
   getAll: async (): Promise<PartnerRead[]> => {
-    return apiClient.get<PartnerRead[]>('/admin/partners');
+    return apiClient.get<PartnerRead[]>("/admin/partners");
   },
 
   getById: async (id: string): Promise<PartnerRead> => {
@@ -240,10 +257,13 @@ export const adminPartnersApi = {
   },
 
   create: async (partnerData: PartnerCreate): Promise<PartnerRead> => {
-    return apiClient.post<PartnerRead>('/admin/partners', partnerData);
+    return apiClient.post<PartnerRead>("/admin/partners", partnerData);
   },
 
-  update: async (id: string, partnerData: PartnerUpdate): Promise<PartnerRead> => {
+  update: async (
+    id: string,
+    partnerData: PartnerUpdate
+  ): Promise<PartnerRead> => {
     return apiClient.put<PartnerRead>(`/admin/partners/${id}`, partnerData);
   },
 
@@ -283,9 +303,9 @@ export const usersApi = {
     const response = await authApi.login(email, password);
     const user = await authApi.getCurrentUser();
 
-    if (user.role !== 'admin') {
+    if (user.role !== "admin") {
       authApi.logout();
-      throw new Error('Unauthorized: Admin access required');
+      throw new Error("Unauthorized: Admin access required");
     }
 
     return {

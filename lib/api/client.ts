@@ -83,6 +83,7 @@ class ApiClient {
         detail: "An error occurred",
       }));
       console.error("API Error:", error);
+      throw new Error(error.detail || `HTTP ${response.status}`);
     }
 
     // Handle 204 No Content

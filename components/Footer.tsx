@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Mail } from 'lucide-react';
+import Link from "next/link";
+import { Facebook, Twitter, Instagram, Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -12,7 +12,8 @@ export function Footer() {
               <span className="text-xl font-bold text-white">Sleepycare</span>
             </div>
             <p className="text-sm">
-              Premium quality wipes for every need. Clean, safe, and eco-friendly solutions for your home and family.
+              Premium quality wipes for every need. Clean, safe, and
+              eco-friendly solutions for your home and family.
             </p>
           </div>
 
@@ -21,22 +22,34 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/shop" className="hover:text-primary-400 transition-colors">
+                <Link
+                  href="/shop"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Shop All Products
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=baby" className="hover:text-primary-400 transition-colors">
+                <Link
+                  href="/shop?category=baby"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Baby Wipes
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=antibacterial" className="hover:text-primary-400 transition-colors">
+                <Link
+                  href="/shop?category=antibacterial"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Antibacterial Wipes
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=kitchen" className="hover:text-primary-400 transition-colors">
+                <Link
+                  href="/shop?category=kitchen"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Kitchen Wipes
                 </Link>
               </li>
@@ -48,22 +61,34 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">Customer Service</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/contact" className="hover:text-primary-400 transition-colors">
+                <a
+                  href="/contact"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Contact Us
                 </a>
               </li>
               <li>
-                <a href="/shipping" className="hover:text-primary-400 transition-colors">
+                <a
+                  href="/shipping"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Shipping Info
                 </a>
               </li>
               <li>
-                <a href="/returns" className="hover:text-primary-400 transition-colors">
+                <a
+                  href="/returns"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   Returns
                 </a>
               </li>
               <li>
-                <a href="/faq" className="hover:text-primary-400 transition-colors">
+                <a
+                  href="/faq"
+                  className="hover:text-primary-400 transition-colors"
+                >
                   FAQ
                 </a>
               </li>
@@ -73,18 +98,40 @@ export function Footer() {
           {/* Newsletter */}
           <div>
             <h3 className="text-white font-semibold mb-4">Stay Connected</h3>
-            <p className="text-sm mb-4">Subscribe to get special offers and updates.</p>
+            <p className="text-sm mb-4">
+              Subscribe to get special offers and updates.
+            </p>
             <div className="flex space-x-4 mb-4">
-              <a href="#" className="hover:text-primary-400 transition-colors">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="#"
+                className="hover:text-primary-400 transition-colors"
+              >
                 <Facebook className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-primary-400 transition-colors">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="#"
+                className="hover:text-primary-400 transition-colors"
+              >
                 <Twitter className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-primary-400 transition-colors">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://www.instagram.com/sleepycare.lb"
+                className="hover:text-primary-400 transition-colors"
+              >
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="hover:text-primary-400 transition-colors">
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href="#"
+                className="hover:text-primary-400 transition-colors"
+              >
                 <Mail className="w-5 h-5" />
               </a>
             </div>

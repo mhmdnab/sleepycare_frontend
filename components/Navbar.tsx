@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { ShoppingCart, Menu, X, User, LogOut, ChevronDown, Package, Settings } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCartStore } from '@/lib/store/cart';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { useCategories } from '@/lib/hooks/useQueries';
-import { Button } from './ui/Button';
-import { CartDrawer } from './CartDrawer';
+import Link from "next/link";
+import { ShoppingCart, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { useCartStore } from "@/lib/store/cart";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { useCategories } from "@/lib/hooks/useQueries";
+import { Button } from "./ui/Button";
+import { CartDrawer } from "./CartDrawer";
 
 export function Navbar() {
   const router = useRouter();
@@ -27,27 +27,33 @@ export function Navbar() {
   // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
         setUserMenuOpen(false);
       }
-      if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
+      if (
+        categoriesRef.current &&
+        !categoriesRef.current.contains(event.target as Node)
+      ) {
         setCategoriesOpen(false);
       }
     };
 
     if (userMenuOpen || categoriesOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [userMenuOpen, categoriesOpen]);
 
   const handleLogout = () => {
     logout();
     setUserMenuOpen(false);
-    router.push('/');
+    router.push("/");
   };
 
   return (
@@ -57,13 +63,24 @@ export function Navbar() {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-xl font-bold text-primary-600">Sleepycare</span>
+              <span className="text-xl font-bold text-primary-600">
+                Sleepycare
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/shop" className="text-gray-700 hover:text-primary-600 transition-colors">
+              <Link
+                href="/shop"
+                className="text-gray-700 hover:text-primary-600 transition-colors"
+              >
                 Shop
+              </Link>
+              <Link
+                href="/about"
+                className="text-gray-700 hover:text-primary-600 transition-colors"
+              >
+                About
               </Link>
 
               {/* Categories Dropdown */}
@@ -86,31 +103,37 @@ export function Navbar() {
                           onClick={() => setCategoriesOpen(false)}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                         >
-                          {category.icon && <span className="mr-2">{category.icon}</span>}
+                          {category.icon && (
+                            <span className="mr-2">{category.icon}</span>
+                          )}
                           {category.name}
                         </Link>
                       ))
                     ) : (
-                      <div className="px-4 py-2 text-sm text-gray-500">No categories available</div>
+                      <div className="px-4 py-2 text-sm text-gray-500">
+                        No categories available
+                      </div>
                     )}
                   </div>
                 )}
               </div>
 
-              <Link href="/contact" className="text-gray-700 hover:text-primary-600 transition-colors">
-                Contact Us
-              </Link>
-              <Link href="/about" className="text-gray-700 hover:text-primary-600 transition-colors">
-                About
-              </Link>
-              <Link href="/faq" className="text-gray-700 hover:text-primary-600 transition-colors">
+              <Link
+                href="/faq"
+                className="text-gray-700 hover:text-primary-600 transition-colors"
+              >
                 FAQ
+              </Link>
+              <Link
+                href="/contact"
+                className="text-gray-700 hover:text-primary-600 transition-colors"
+              >
+                Contact Us
               </Link>
             </div>
 
             {/* Actions */}
             <div className="flex items-center space-x-4">
-
               <button
                 onClick={() => setCartOpen(true)}
                 className="relative text-gray-700 hover:text-primary-600 transition-colors"
@@ -126,10 +149,12 @@ export function Navbar() {
               {/* User Menu - Desktop */}
               <div className="hidden md:block relative" ref={userMenuRef}>
                 {isAuthenticated && user ? (
-                  user.role === 'admin' ? (
+                  user.role === "admin" ? (
                     <div className="flex items-center space-x-2">
                       <Link href="/admin">
-                        <Button size="sm" variant="secondary">Admin</Button>
+                        <Button size="sm" variant="secondary">
+                          Admin
+                        </Button>
                       </Link>
                       <button
                         onClick={handleLogout}
@@ -152,8 +177,12 @@ export function Navbar() {
                       {userMenuOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                           <div className="px-4 py-2 border-b">
-                            <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                            <p className="text-xs text-gray-500">{user.email}</p>
+                            <p className="text-sm font-medium text-gray-900">
+                              {user.name}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {user.email}
+                            </p>
                           </div>
                           <Link
                             href="/profile"
@@ -204,7 +233,11 @@ export function Navbar() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden text-gray-700"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
               </button>
             </div>
           </div>
@@ -222,7 +255,9 @@ export function Navbar() {
 
               {/* Mobile Categories */}
               <div className="space-y-2">
-                <p className="py-2 text-sm font-semibold text-gray-900">Categories</p>
+                <p className="py-2 text-sm font-semibold text-gray-900">
+                  Categories
+                </p>
                 {categories.map((category) => (
                   <Link
                     key={category.id}
@@ -230,7 +265,9 @@ export function Navbar() {
                     className="block py-2 pl-4 text-gray-600 hover:text-primary-600"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    {category.icon && <span className="mr-2">{category.icon}</span>}
+                    {category.icon && (
+                      <span className="mr-2">{category.icon}</span>
+                    )}
                     {category.name}
                   </Link>
                 ))}
@@ -259,22 +296,45 @@ export function Navbar() {
               </Link>
 
               {/* Mobile User Menu */}
-              {isAuthenticated && user && user.role !== 'admin' ? (
-                <div className="border-t pt-3 mt-3 space-y-2">
-                  <div className="py-2">
-                    <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                    <p className="text-xs text-gray-500">{user.email}</p>
+              {isAuthenticated && user ? (
+                user.role === "admin" ? (
+                  <div className="space-y-2">
+                    <Link
+                      href="/admin"
+                      className="block py-2 text-primary-600 font-medium"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full text-left py-2 text-red-600 font-medium"
+                    >
+                      Logout
+                    </button>
                   </div>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="block w-full text-left py-2 text-red-600 font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
+                ) : (
+                  <div className="border-t pt-3 mt-3 space-y-2">
+                    <div className="py-2">
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-500">{user.email}</p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block w-full text-left py-2 text-red-600 font-medium"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )
               ) : (
                 <Link
                   href="/auth/login"
