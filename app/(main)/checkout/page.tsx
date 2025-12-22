@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   CreditCard,
@@ -59,15 +59,17 @@ export default function CheckoutPage() {
   const tax = total * 0.08; // 8% tax
   const finalTotal = total + shippingCost + tax;
 
-  // Redirect if cart is empty
-  if (items.length === 0 && !orderSuccess) {
-    router.push("/shop");
-    return null;
-  }
+  // Redirect if cart is empty or not authenticated
+  useEffect(() => {
+    if (items.length === 0 && !orderSuccess) {
+      router.push("/shop");
+    } else if (!isAuthenticated && !orderSuccess) {
+      router.push("/auth/login?redirect=/checkout");
+    }
+  }, [items.length, orderSuccess, isAuthenticated, router]);
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated && !orderSuccess) {
-    router.push("/auth/login?redirect=/checkout");
+  // Show loading while redirecting
+  if ((items.length === 0 || !isAuthenticated) && !orderSuccess) {
     return null;
   }
 
