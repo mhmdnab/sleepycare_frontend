@@ -143,7 +143,21 @@ export default function AdminCategoriesPage() {
               className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow"
             >
               <div className="text-center mb-4">
-                <div className="text-4xl mb-3">{category.icon || '📁'}</div>
+                <div className="flex justify-center mb-3">
+                  {category.icon ? (
+                    category.icon.startsWith('data:') || category.icon.startsWith('http') ? (
+                      <img
+                        src={category.icon}
+                        alt={category.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
+                    ) : (
+                      <div className="text-4xl">{category.icon}</div>
+                    )
+                  ) : (
+                    <div className="text-4xl">📁</div>
+                  )}
+                </div>
                 <h3 className="font-semibold text-gray-900 text-lg">
                   {category.name}
                 </h3>

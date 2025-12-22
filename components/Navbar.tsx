@@ -2,6 +2,16 @@
 
 import Link from "next/link";
 import { ShoppingCart, Menu, X, User, LogOut, ChevronDown, Package, Settings } from "lucide-react";
+import {
+  ShoppingCart,
+  Menu,
+  X,
+  User,
+  LogOut,
+  ChevronDown,
+  Package,
+  Settings,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
@@ -103,9 +113,6 @@ export function Navbar() {
                           onClick={() => setCategoriesOpen(false)}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                         >
-                          {category.icon && (
-                            <span className="mr-2">{category.icon}</span>
-                          )}
                           {category.name}
                         </Link>
                       ))

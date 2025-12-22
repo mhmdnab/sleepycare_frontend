@@ -1,42 +1,51 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { Leaf, Shield, Heart, Sparkles, Star } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { ProductCard } from '@/components/ProductCard';
-import { useBestSellers, useCategories, usePartners } from '@/lib/hooks/useQueries';
+import Link from "next/link";
+import Image from "next/image";
+import { Leaf, Shield, Heart, Sparkles, Star } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { ProductCard } from "@/components/ProductCard";
+import {
+  useBestSellers,
+  useCategories,
+  usePartners,
+} from "@/lib/hooks/useQueries";
 import {
   AnimatedHero,
   AnimatedSection,
   AnimatedProductGrid,
   AnimatedCategoryGrid,
   AnimatedTestimonialGrid,
-  AnimatedSocialGrid
-} from '@/components/AnimatedComponents';
-import { PartnersCarousel } from '@/components/PartnersCarousel';
+  AnimatedSocialGrid,
+} from "@/components/AnimatedComponents";
+import { PartnersCarousel } from "@/components/PartnersCarousel";
+import image from "@/public/image1.jpg";
+import image2 from "@/public/image2.jpg";
 
 // Testimonials are kept as static content since they don't change frequently
 const testimonials = [
   {
     id: 1,
-    name: 'Sarah Johnson',
-    role: 'New Mom',
-    content: 'These baby wipes are absolutely amazing! So gentle on my baby\'s skin and I love that they\'re eco-friendly.',
+    name: "Sarah Johnson",
+    role: "New Mom",
+    content:
+      "These baby wipes are absolutely amazing! So gentle on my baby's skin and I love that they're eco-friendly.",
     rating: 5,
   },
   {
     id: 2,
-    name: 'Michael Chen',
-    role: 'Restaurant Owner',
-    content: 'We use the antibacterial wipes throughout our restaurant. They work incredibly well and the price is unbeatable.',
+    name: "Michael Chen",
+    role: "Restaurant Owner",
+    content:
+      "We use the antibacterial wipes throughout our restaurant. They work incredibly well and the price is unbeatable.",
     rating: 5,
   },
   {
     id: 3,
-    name: 'Emily Davis',
-    role: 'Homemaker',
-    content: 'The kitchen wipes have made cleaning so much easier. They cut through grease like nothing else I\'ve tried.',
+    name: "Emily Davis",
+    role: "Homemaker",
+    content:
+      "The kitchen wipes have made cleaning so much easier. They cut through grease like nothing else I've tried.",
     rating: 5,
   },
 ];
@@ -54,10 +63,10 @@ export default function HomePage() {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=1920&h=1080&fit=crop"
+            src={image}
             alt="Cleaning wipes background"
             fill
-            className="object-cover opacity-20"
+            className="object-cover opacity-50"
             priority
           />
         </div>
@@ -83,30 +92,55 @@ export default function HomePage() {
               <div className="absolute -top-8 -left-20 md:-top-12 md:-left-32 z-20 animate-bounce-slow">
                 <div className="bg-purple-200 rounded-full p-3 md:p-4 border-4 border-purple-400 shadow-lg rotate-12">
                   <div className="text-center">
-                    <p className="text-purple-800 font-bold text-[10px] md:text-xs">SUSPICIOUSLY</p>
-                    <p className="text-purple-600 text-[10px] md:text-xs">SOFT</p>
+                    <p className="text-purple-800 font-bold text-[10px] md:text-xs">
+                      SUSPICIOUSLY
+                    </p>
+                    <p className="text-purple-600 text-[10px] md:text-xs">
+                      SOFT
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -top-8 -right-20 md:-top-12 md:-right-32 z-20 animate-bounce-slow" style={{ animationDelay: '0.2s' }}>
+              <div
+                className="absolute -top-8 -right-20 md:-top-12 md:-right-32 z-20 animate-bounce-slow"
+                style={{ animationDelay: "0.2s" }}
+              >
                 <div className="bg-primary-200 rounded-full p-3 md:p-4 border-4 border-primary-400 shadow-lg -rotate-12">
                   <div className="text-center">
-                    <p className="text-primary-900 font-bold text-[10px] md:text-xs">CLEANS</p>
-                    <p className="text-primary-800 text-[10px] md:text-xs">TP</p>
+                    <p className="text-primary-900 font-bold text-[10px] md:text-xs">
+                      CLEANS
+                    </p>
+                    <p className="text-primary-800 text-[10px] md:text-xs">
+                      TP
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute -bottom-8 -left-16 md:-bottom-12 md:-left-28 z-20 animate-bounce-slow" style={{ animationDelay: '0.4s' }}>
+              <div
+                className="absolute -bottom-8 -left-16 md:-bottom-12 md:-left-28 z-20 animate-bounce-slow"
+                style={{ animationDelay: "0.4s" }}
+              >
                 <div className="bg-pink-200 rounded-3xl px-4 py-2 md:px-6 md:py-3 border-4 border-pink-400 shadow-lg -rotate-6">
-                  <p className="text-pink-800 font-pacifico text-xs md:text-base">Made For<br/>Sensitive Skin</p>
+                  <p className="text-pink-800 font-pacifico text-xs md:text-base">
+                    Made For
+                    <br />
+                    Sensitive Skin
+                  </p>
                 </div>
               </div>
 
-              <div className="absolute -bottom-8 -right-16 md:-bottom-12 md:-right-28 z-20 animate-bounce-slow" style={{ animationDelay: '0.6s' }}>
+              <div
+                className="absolute -bottom-8 -right-16 md:-bottom-12 md:-right-28 z-20 animate-bounce-slow"
+                style={{ animationDelay: "0.6s" }}
+              >
                 <div className="bg-cyan-200 rounded-3xl px-4 py-2 md:px-6 md:py-3 border-4 border-cyan-400 shadow-lg rotate-6">
-                  <p className="text-cyan-900 font-pacifico text-xs md:text-base">Shockingly<br/>Strong</p>
+                  <p className="text-cyan-900 font-pacifico text-xs md:text-base">
+                    Shockingly
+                    <br />
+                    Strong
+                  </p>
                 </div>
               </div>
 
@@ -127,7 +161,11 @@ export default function HomePage() {
                 </Button>
               </Link>
               <Link href="/about">
-                <Button size="lg" variant="outline" className="text-lg px-10 py-6">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="text-lg px-10 py-6"
+                >
                   Learn More
                 </Button>
               </Link>
@@ -143,14 +181,18 @@ export default function HomePage() {
             <h2 className="text-4xl lg:text-5xl font-pacifico text-gray-900 mb-4">
               premium wipes for an
               <br />
-              <span className="text-primary-600">actually clean experience.</span>
+              <span className="text-primary-600">
+                actually clean experience.
+              </span>
             </h2>
             <div className="flex gap-4 justify-center mt-8">
               <Link href="/shop">
                 <Button size="lg">Shop Now</Button>
               </Link>
               <Link href="/about">
-                <Button size="lg" variant="outline">Find in Stores</Button>
+                <Button size="lg" variant="outline">
+                  Find in Stores
+                </Button>
               </Link>
             </div>
           </AnimatedSection>
@@ -159,7 +201,9 @@ export default function HomePage() {
 
           <AnimatedSection className="text-center mt-12" delay={0.2}>
             <Link href="/shop">
-              <Button size="lg" variant="outline">Shop All Products</Button>
+              <Button size="lg" variant="outline">
+                Shop All Products
+              </Button>
             </Link>
           </AnimatedSection>
         </div>
@@ -192,9 +236,9 @@ export default function HomePage() {
 
       {/* Subscribe & Save */}
       <section className="py-20 bg-primary-600 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 opacity-50">
           <Image
-            src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?w=1920&h=600&fit=crop"
+            src={image2}
             alt="Background pattern"
             fill
             className="object-cover"
@@ -205,11 +249,14 @@ export default function HomePage() {
             subscribe & save 20%
           </h2>
           <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
-            Never run out of your favorite wipes. Pause, swap, or cancel anytime.
-            Your home and your wallet will thank you.
+            Never run out of your favorite wipes. Pause, swap, or cancel
+            anytime. Your home and your wallet will thank you.
           </p>
           <Link href="/shop">
-            <Button size="lg" className="bg-white text-primary-600 hover:bg-gray-100 text-lg px-10 py-6">
+            <Button
+              size="lg"
+              className="bg-white text-primary-600 hover:bg-gray-100 text-lg px-10 py-6"
+            >
               Save Now
             </Button>
           </Link>
@@ -221,9 +268,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <h2 className="text-4xl lg:text-5xl font-pacifico text-center text-gray-900 mb-4">
-              come join the fun <span className="text-primary-600">@sleepycare</span>
+              come join the fun{" "}
+              <span className="text-primary-600">@sleepycare</span>
             </h2>
-            <p className="text-center text-gray-600 mb-12">Follow us on social media</p>
+            <p className="text-center text-gray-600 mb-12">
+              Follow us on social media
+            </p>
           </AnimatedSection>
 
           <AnimatedSocialGrid products={bestSellers} />

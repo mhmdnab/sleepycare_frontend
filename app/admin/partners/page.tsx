@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Edit, Trash2, Plus, Search } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { usePartners, useCreatePartner, useUpdatePartner, useDeletePartner } from '@/lib/hooks/useQueries';
-import { PartnerRead } from '@/lib/api/types';
+import { useState } from "react";
+import { Edit, Trash2, Plus, Search } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import {
+  usePartners,
+  useCreatePartner,
+  useUpdatePartner,
+  useDeletePartner,
+} from "@/lib/hooks/useQueries";
+import { PartnerRead } from "@/lib/api/types";
 
 interface Partner {
   id: string;
@@ -18,12 +23,12 @@ export default function AdminPartnersPage() {
   const updatePartner = useUpdatePartner();
   const deletePartner = useDeletePartner();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingPartner, setEditingPartner] = useState<Partner | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string>('');
-  const [formData, setFormData] = useState({ name: '', icon: '' });
+  const [logoPreview, setLogoPreview] = useState<string>("");
+  const [formData, setFormData] = useState({ name: "", icon: "" });
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -46,8 +51,8 @@ export default function AdminPartnersPage() {
   const handleAdd = () => {
     setEditingPartner(null);
     setLogoFile(null);
-    setLogoPreview('');
-    setFormData({ name: '', icon: '' });
+    setLogoPreview("");
+    setFormData({ name: "", icon: "" });
     setShowModal(true);
   };
 
@@ -60,12 +65,12 @@ export default function AdminPartnersPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this partner?')) {
+    if (confirm("Are you sure you want to delete this partner?")) {
       try {
         await deletePartner.mutateAsync(id);
       } catch (error) {
-        console.error('Failed to delete partner:', error);
-        alert('Failed to delete partner');
+        console.error("Failed to delete partner:", error);
+        alert("Failed to delete partner");
       }
     }
   };
@@ -89,10 +94,10 @@ export default function AdminPartnersPage() {
         });
       }
       setShowModal(false);
-      setFormData({ name: '', icon: '' });
+      setFormData({ name: "", icon: "" });
     } catch (error) {
-      console.error('Failed to save partner:', error);
-      alert('Failed to save partner');
+      console.error("Failed to save partner:", error);
+      alert("Failed to save partner");
     }
   };
 
@@ -100,8 +105,12 @@ export default function AdminPartnersPage() {
     <div>
       <div className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Available At Partners</h1>
-          <p className="text-gray-600 mt-2">Manage where products are available</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Available At Partners
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Manage where products are available
+          </p>
         </div>
         <Button className="flex items-center space-x-2" onClick={handleAdd}>
           <Plus className="w-5 h-5" />
@@ -147,7 +156,8 @@ export default function AdminPartnersPage() {
                       alt={partner.name}
                       className="max-h-full max-w-full object-contain"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/150?text=No+Logo';
+                        (e.target as HTMLImageElement).src =
+                          "https://unsplash.com/photos/waterfall-cascading-down-a-rocky-cliff-surrounded-by-trees-6gIJTcCZb28";
                       }}
                     />
                   ) : (
@@ -187,7 +197,7 @@ export default function AdminPartnersPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                {editingPartner ? 'Edit Partner' : 'Add New Partner'}
+                {editingPartner ? "Edit Partner" : "Add New Partner"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -250,7 +260,7 @@ export default function AdminPartnersPage() {
                     Cancel
                   </Button>
                   <Button type="submit">
-                    {editingPartner ? 'Update' : 'Create'}
+                    {editingPartner ? "Update" : "Create"}
                   </Button>
                 </div>
               </form>

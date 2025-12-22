@@ -32,6 +32,7 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [imageChanged, setImageChanged] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -42,22 +43,26 @@ export default function AdminProductsPage() {
   });
 
   // Map backend data to include image and category fields
-  const products: Product[] = productsData.map((p: ProductRead) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description,
-    price: p.price,
-    stock: p.stock,
-    image_url: p.image_url,
-    category_id: p.category_id,
-    image: p.image_url || '/placeholder-product.jpg',
-    category: p.category_id || '',
-  }));
+  const products: Product[] = productsData.map((p: ProductRead) => {
+    const category = categories.find((cat) => cat.id === p.category_id);
+    return {
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      stock: p.stock,
+      image_url: p.image_url,
+      category_id: p.category_id,
+      image: p.image_url || '/placeholder-product.jpg',
+      category: category ? category.name : p.category_id || 'Uncategorized',
+    };
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
+      setImageChanged(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
@@ -72,6 +77,7 @@ export default function AdminProductsPage() {
     setEditingProduct(null);
     setImageFile(null);
     setImagePreview('');
+    setImageChanged(false);
     setFormData({
       name: '',
       description: '',
@@ -87,12 +93,13 @@ export default function AdminProductsPage() {
     setEditingProduct(product);
     setImageFile(null);
     setImagePreview(product.image_url || '');
+    setImageChanged(false);
     setFormData({
       name: product.name,
       description: product.description || '',
       price: product.price,
       stock: product.stock,
-      image_url: product.image_url || '',
+      image_url: '',
       category_id: product.category_id || ''
     });
     setShowModal(true);
@@ -113,6 +120,7 @@ export default function AdminProductsPage() {
     e.preventDefault();
     try {
       if (editingProduct) {
+        // Only include image_url if it was changed
         await updateProduct.mutateAsync({
           id: editingProduct.id,
           data: {
@@ -120,7 +128,7 @@ export default function AdminProductsPage() {
             description: formData.description || null,
             price: formData.price,
             stock: formData.stock,
-            image_url: formData.image_url || null,
+            image_url: imageChanged ? (formData.image_url || null) : undefined,
             category_id: formData.category_id || null
           }
         });
@@ -310,7 +318,7 @@ export default function AdminProductsPage() {
                       <option value="">Select a category (optional)</option>
                       {categories.map((category) => (
                         <option key={category.id} value={category.id}>
-                          {category.icon && `${category.icon} `}{category.name}
+                          {category.name}
                         </option>
                       ))}
                     </select>

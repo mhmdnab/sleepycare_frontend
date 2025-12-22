@@ -164,14 +164,50 @@ export const transactionsApi = {
 // Admin Categories API
 export const adminCategoriesApi = {
   create: async (categoryData: CategoryCreate): Promise<CategoryRead> => {
-    return apiClient.post<CategoryRead>("/admin/categories", categoryData);
+    const formData = new FormData();
+    formData.append("name", categoryData.name);
+    if (categoryData.description) {
+      formData.append("description", categoryData.description);
+    }
+    if (categoryData.icon) {
+      // Check if icon is a base64 string
+      if (
+        typeof categoryData.icon === "string" &&
+        categoryData.icon.startsWith("data:")
+      ) {
+        formData.append("icon_base64", categoryData.icon);
+      } else if (typeof categoryData.icon === "string") {
+        formData.append("icon_base64", categoryData.icon);
+      }
+    }
+
+    return apiClient.postForm<CategoryRead>("/admin/categories", formData);
   },
 
   update: async (
     id: string,
     categoryData: CategoryUpdate
   ): Promise<CategoryRead> => {
-    return apiClient.put<CategoryRead>(`/admin/categories/${id}`, categoryData);
+    const formData = new FormData();
+    if (categoryData.name) {
+      formData.append("name", categoryData.name);
+    }
+    if (categoryData.description !== undefined) {
+      formData.append("description", categoryData.description || "");
+    }
+    if (categoryData.icon) {
+      // Check if icon is a base64 string
+      if (
+        typeof categoryData.icon === "string" &&
+        categoryData.icon.startsWith("data:")
+      ) {
+        formData.append("icon_base64", categoryData.icon);
+      } else if (typeof categoryData.icon === "string") {
+        formData.append("icon_base64", categoryData.icon);
+      }
+    }
+
+    return apiClient.putForm<CategoryRead>(`/admin/categories/${id}`, formData);
   },
 
   delete: async (id: string): Promise<void> => {
@@ -186,14 +222,62 @@ export const adminProductsApi = {
   },
 
   create: async (productData: ProductCreate): Promise<ProductRead> => {
-    return apiClient.post<ProductRead>("/admin/products", productData);
+    const formData = new FormData();
+    formData.append("name", productData.name);
+    formData.append("description", productData.description || "");
+    formData.append("price", productData.price.toString());
+    formData.append("stock", productData.stock.toString());
+    if (productData.category_id) {
+      formData.append("category_id", productData.category_id);
+    }
+    if (productData.image_url) {
+      // Check if image_url is a base64 string
+      if (
+        typeof productData.image_url === "string" &&
+        productData.image_url.startsWith("data:")
+      ) {
+        formData.append("image_base64", productData.image_url);
+      } else if (typeof productData.image_url === "string") {
+        formData.append("image_base64", productData.image_url);
+      }
+    }
+
+    return apiClient.postForm<ProductRead>("/admin/products", formData);
   },
 
   update: async (
     id: string,
     productData: ProductUpdate
   ): Promise<ProductRead> => {
-    return apiClient.put<ProductRead>(`/admin/products/${id}`, productData);
+    const formData = new FormData();
+    if (productData.name) {
+      formData.append("name", productData.name);
+    }
+    if (productData.description) {
+      formData.append("description", productData.description);
+    }
+    if (productData.price !== undefined && productData.price !== null) {
+      formData.append("price", productData.price.toString());
+    }
+    if (productData.stock !== undefined && productData.stock !== null) {
+      formData.append("stock", productData.stock.toString());
+    }
+    if (productData.category_id) {
+      formData.append("category_id", productData.category_id);
+    }
+    if (productData.image_url) {
+      // Check if image_url is a base64 string
+      if (
+        typeof productData.image_url === "string" &&
+        productData.image_url.startsWith("data:")
+      ) {
+        formData.append("image_base64", productData.image_url);
+      } else if (typeof productData.image_url === "string") {
+        formData.append("image_base64", productData.image_url);
+      }
+    }
+
+    return apiClient.putForm<ProductRead>(`/admin/products/${id}`, formData);
   },
 
   delete: async (id: string): Promise<void> => {
@@ -257,14 +341,44 @@ export const adminPartnersApi = {
   },
 
   create: async (partnerData: PartnerCreate): Promise<PartnerRead> => {
-    return apiClient.post<PartnerRead>("/admin/partners", partnerData);
+    const formData = new FormData();
+    formData.append("name", partnerData.name);
+    if (partnerData.icon) {
+      // Check if icon is a base64 string
+      if (
+        typeof partnerData.icon === "string" &&
+        partnerData.icon.startsWith("data:")
+      ) {
+        formData.append("icon_base64", partnerData.icon);
+      } else if (typeof partnerData.icon === "string") {
+        formData.append("icon_base64", partnerData.icon);
+      }
+    }
+
+    return apiClient.postForm<PartnerRead>("/admin/partners", formData);
   },
 
   update: async (
     id: string,
     partnerData: PartnerUpdate
   ): Promise<PartnerRead> => {
-    return apiClient.put<PartnerRead>(`/admin/partners/${id}`, partnerData);
+    const formData = new FormData();
+    if (partnerData.name) {
+      formData.append("name", partnerData.name);
+    }
+    if (partnerData.icon) {
+      // Check if icon is a base64 string
+      if (
+        typeof partnerData.icon === "string" &&
+        partnerData.icon.startsWith("data:")
+      ) {
+        formData.append("icon_base64", partnerData.icon);
+      } else if (typeof partnerData.icon === "string") {
+        formData.append("icon_base64", partnerData.icon);
+      }
+    }
+
+    return apiClient.putForm<PartnerRead>(`/admin/partners/${id}`, formData);
   },
 
   delete: async (id: string): Promise<void> => {

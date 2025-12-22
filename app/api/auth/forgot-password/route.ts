@@ -12,10 +12,13 @@ interface ForgotPasswordRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔔 Received forgot password email request');
     const body = (await request.json()) as ForgotPasswordRequest;
+    console.log('📧 Sending password reset email to:', body.email);
 
     // Validate required fields
     if (!body.email || !body.resetToken || !body.resetLink) {
+      console.error('❌ Missing required fields');
       return NextResponse.json(
         { error: 'Missing required fields: email, resetToken, resetLink' },
         { status: 400 }
@@ -25,15 +28,23 @@ export async function POST(request: NextRequest) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(body.email)) {
+      console.error('❌ Invalid email format:', body.email);
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
       );
     }
 
+    console.log('📨 Calling Resend API...');
+
+    // For testing with Resend's test email (onboarding@resend.dev),
+    // emails can only be sent to the account owner's email.
+    // For production, verify a domain at resend.com/domains and update the from address
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'SleepyCare <onboarding@resend.dev>';
+
     // Send password reset email
     const response = await resend.emails.send({
-      from: 'SleepyCare <onboarding@resend.dev>',
+      from: fromEmail,
       to: body.email,
       subject: 'Reset Your SleepyCare Password',
       html: `
@@ -132,24 +143,31 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    if (!response) {
+    console.log('✅ Resend API response:', JSON.stringify(response, null, 2));
+
+    if (!response || response.error) {
+      console.error('❌ Resend API error:', response?.error);
       return NextResponse.json(
-        { error: 'Failed to send password reset email' },
+        { error: 'Failed to send password reset email', details: response?.error },
         { status: 500 }
       );
     }
+
+    console.log('✅ Password reset email sent successfully to:', body.email);
+    console.log('📬 Email ID:', response.data?.id);
 
     return NextResponse.json(
       {
         success: true,
         message: 'Password reset email sent successfully',
+        emailId: response.data?.id,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Forgot password email error:', error);
+    console.error('❌ Forgot password email error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }
