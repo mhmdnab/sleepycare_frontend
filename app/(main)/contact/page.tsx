@@ -230,8 +230,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <a href="mailto:support@sleepycare.com" className="text-gray-600 hover:text-primary-600 transition-colors">
-                      support@sleepycare.com
+                    <a href="mailto:sleepycare.lb@gmail.com" className="text-gray-600 hover:text-primary-600 transition-colors">
+                      sleepycare.lb@gmail.com
                     </a>
                     <p className="text-sm text-gray-500 mt-1">For general inquiries</p>
                   </div>
@@ -256,8 +256,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                    <a href="tel:+11234567890" className="text-gray-600 hover:text-primary-600 transition-colors">
-                      +1 (123) 456-7890
+                    <a href="tel:+96178749190" className="text-gray-600 hover:text-primary-600 transition-colors">
+                      + (961) 78-749190
                     </a>
                     <p className="text-sm text-gray-500 mt-1">Mon-Fri, 9am-6pm EST</p>
                   </div>
