@@ -1,4 +1,4 @@
-const API_URL = "https://sleeptycare-backend.onrender.com";
+const API_URL = "https://sleeptycare-backend.onrender.com/api";
 
 export interface ApiError {
   detail: string;
