@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, Menu, X, User, LogOut, ChevronDown, Package, Settings } from "lucide-react";
 import {
   ShoppingCart,
   Menu,
@@ -12,6 +11,7 @@ import {
   Package,
   Settings,
 } from "lucide-react";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
