@@ -1,4 +1,4 @@
-const API_URL = "https://sleepycare-backend.onrender.com";
+const API_URL = "http://localhost:8000";
 
 export interface ApiError {
   detail: string;
@@ -73,7 +73,7 @@ class ApiClient {
       // Handle 401 Unauthorized - token expired or invalid
       if (response.status === 401) {
         this.setToken(null);
-        localStorage.removeItem('auth-storage');
+        localStorage.removeItem("auth-storage");
         if (onTokenExpired) {
           onTokenExpired();
         }
@@ -119,16 +119,49 @@ class ApiClient {
   // Form data for login (OAuth2PasswordRequestForm)
   async postForm<T>(
     endpoint: string,
-    data: Record<string, string>
+    data: Record<string, string> | FormData
   ): Promise<T> {
-    const formData = new URLSearchParams();
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
+    const headers: Record<string, string> = {};
+
+    if (this.token) {
+      headers["Authorization"] = `Bearer ${this.token}`;
+    }
+
+    let body: URLSearchParams | FormData;
+
+    // Check if data is FormData
+    if (data instanceof FormData) {
+      body = data;
+      // Don't set Content-Type for FormData - browser will set it with boundary
+    } else {
+      // Handle URLSearchParams for OAuth2
+      const formData = new URLSearchParams();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      body = formData;
+      headers["Content-Type"] = "application/x-www-form-urlencoded";
+    }
+
+    const url = `${this.baseURL}${endpoint}`;
+    const response = await fetch(url, {
+      method: "POST",
+      headers,
+      body,
     });
 
-    const headers: Record<string, string> = {
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
+    if (!response.ok) {
+      const error: ApiError = await response.json().catch(() => ({
+        detail: "An error occurred",
+      }));
+      throw new Error(error.detail || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+  }
+
+  async putForm<T>(endpoint: string, data: FormData): Promise<T> {
+    const headers: Record<string, string> = {};
 
     if (this.token) {
       headers["Authorization"] = `Bearer ${this.token}`;
@@ -136,9 +169,9 @@ class ApiClient {
 
     const url = `${this.baseURL}${endpoint}`;
     const response = await fetch(url, {
-      method: "POST",
+      method: "PUT",
       headers,
-      body: formData,
+      body: data,
     });
 
     if (!response.ok) {

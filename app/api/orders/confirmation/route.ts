@@ -24,7 +24,6 @@ interface OrderConfirmationRequest {
     address: string;
     city: string;
     state: string;
-    zipCode: string;
     country: string;
     phone: string;
   };
@@ -32,15 +31,30 @@ interface OrderConfirmationRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔔 Received order confirmation email request');
     const body = (await request.json()) as OrderConfirmationRequest;
+    console.log('📧 Sending order confirmation email to:', body.customerEmail);
 
     // Validate required fields
     if (!body.orderId || !body.customerEmail || !body.items || body.items.length === 0) {
+      console.error('❌ Missing required fields');
       return NextResponse.json(
         { error: 'Missing required order information' },
         { status: 400 }
       );
     }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.customerEmail)) {
+      console.error('❌ Invalid email format:', body.customerEmail);
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    console.log('📨 Calling Resend API...');
 
     const itemsHtml = body.items
       .map(
@@ -56,11 +70,13 @@ export async function POST(request: NextRequest) {
 
     const shippingAddress = body.shippingAddress;
 
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'SleepyCare <onboarding@resend.dev>';
+
     // Send confirmation email to customer
     const response = await resend.emails.send({
-      from: 'SleepyCare <onboarding@resend.dev>',
+      from: fromEmail,
       to: body.customerEmail,
-      subject: `Order Confirmation - Order #${body.orderId}`,
+      subject: `Order Confirmation - Order #${body.orderId.slice(0, 8)}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -161,7 +177,7 @@ export async function POST(request: NextRequest) {
                   <div class="address-box">
                     <strong>${shippingAddress.fullName}</strong><br>
                     ${shippingAddress.address}<br>
-                    ${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zipCode}<br>
+                    ${shippingAddress.city}, ${shippingAddress.state}<br>
                     ${shippingAddress.country}<br>
                     <br>
                     <strong>Phone:</strong> ${shippingAddress.phone}
@@ -190,24 +206,31 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    if (!response) {
+    console.log('✅ Resend API response:', JSON.stringify(response, null, 2));
+
+    if (!response || response.error) {
+      console.error('❌ Resend API error:', response?.error);
       return NextResponse.json(
-        { error: 'Failed to send confirmation email' },
+        { error: 'Failed to send confirmation email', details: response?.error },
         { status: 500 }
       );
     }
+
+    console.log('✅ Order confirmation email sent successfully to:', body.customerEmail);
+    console.log('📬 Email ID:', response.data?.id);
 
     return NextResponse.json(
       {
         success: true,
         message: 'Confirmation email sent successfully',
+        emailId: response.data?.id,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Order confirmation email error:', error);
+    console.error('❌ Order confirmation email error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

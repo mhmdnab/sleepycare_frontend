@@ -78,14 +78,6 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="/returns"
-                  className="hover:text-primary-400 transition-colors"
-                >
-                  Returns
-                </a>
-              </li>
-              <li>
-                <a
                   href="/faq"
                   className="hover:text-primary-400 transition-colors"
                 >
