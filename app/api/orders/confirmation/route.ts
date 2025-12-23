@@ -1,5 +1,5 @@
-import { Resend } from 'resend';
-import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from "resend";
+import { NextRequest, NextResponse } from "next/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -31,15 +31,20 @@ interface OrderConfirmationRequest {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔔 Received order confirmation email request');
+    console.log("🔔 Received order confirmation email request");
     const body = (await request.json()) as OrderConfirmationRequest;
-    console.log('📧 Sending order confirmation email to:', body.customerEmail);
+    console.log("📧 Sending order confirmation email to:", body.customerEmail);
 
     // Validate required fields
-    if (!body.orderId || !body.customerEmail || !body.items || body.items.length === 0) {
-      console.error('❌ Missing required fields');
+    if (
+      !body.orderId ||
+      !body.customerEmail ||
+      !body.items ||
+      body.items.length === 0
+    ) {
+      console.error("❌ Missing required fields");
       return NextResponse.json(
-        { error: 'Missing required order information' },
+        { error: "Missing required order information" },
         { status: 400 }
       );
     }
@@ -47,30 +52,35 @@ export async function POST(request: NextRequest) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(body.customerEmail)) {
-      console.error('❌ Invalid email format:', body.customerEmail);
+      console.error("❌ Invalid email format:", body.customerEmail);
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: "Invalid email format" },
         { status: 400 }
       );
     }
 
-    console.log('📨 Calling Resend API...');
+    console.log("📨 Calling Resend API...");
 
     const itemsHtml = body.items
       .map(
         (item) => `
         <tr style="border-bottom: 1px solid #e5e7eb;">
-          <td style="padding: 12px 0; text-align: left;">${item.product_name}</td>
+          <td style="padding: 12px 0; text-align: left;">${
+            item.product_name
+          }</td>
           <td style="padding: 12px 0; text-align: center;">${item.quantity}</td>
-          <td style="padding: 12px 0; text-align: right;">$${(item.unit_price * item.quantity).toFixed(2)}</td>
+          <td style="padding: 12px 0; text-align: right;">$${(
+            item.unit_price * item.quantity
+          ).toFixed(2)}</td>
         </tr>
       `
       )
-      .join('');
+      .join("");
 
     const shippingAddress = body.shippingAddress;
 
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'SleepyCare <onboarding@resend.dev>';
+    const fromEmail =
+      process.env.RESEND_FROM_EMAIL || "SleepyCare <onboarding@resend.dev>";
 
     // Send confirmation email to customer
     const response = await resend.emails.send({
@@ -123,11 +133,18 @@ export async function POST(request: NextRequest) {
                   </div>
                   <div class="price-row">
                     <span class="price-label">Order Date:</span>
-                    <span class="price-value">${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                    <span class="price-value">${new Date().toLocaleDateString(
+                      "en-US",
+                      { year: "numeric", month: "long", day: "numeric" }
+                    )}</span>
                   </div>
                   <div class="price-row">
                     <span class="price-label">Payment Method:</span>
-                    <span class="price-value">${body.paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' : 'Credit Card'}</span>
+                    <span class="price-value">${
+                      body.paymentMethod === "cash_on_delivery"
+                        ? "Cash on Delivery"
+                        : "Credit Card"
+                    }</span>
                   </div>
                   <div style="margin-top: 15px;">
                     <span class="status-badge">✓ Order Confirmed</span>
@@ -155,11 +172,17 @@ export async function POST(request: NextRequest) {
                 <div class="order-section">
                   <div class="price-row">
                     <span class="price-label">Subtotal:</span>
-                    <span class="price-value">$${body.subtotal.toFixed(2)}</span>
+                    <span class="price-value">$${body.subtotal.toFixed(
+                      2
+                    )}</span>
                   </div>
                   <div class="price-row">
                     <span class="price-label">Shipping:</span>
-                    <span class="price-value">${body.shipping === 0 ? 'FREE' : '$' + body.shipping.toFixed(2)}</span>
+                    <span class="price-value">${
+                      body.shipping === 0
+                        ? "FREE"
+                        : "$" + body.shipping.toFixed(2)
+                    }</span>
                   </div>
                   <div class="price-row">
                     <span class="price-label">Tax (8%):</span>
@@ -192,11 +215,11 @@ export async function POST(request: NextRequest) {
                 </div>
 
                 <div style="text-align: center;">
-                  <a href="https://sleepycare.com/orders" class="button">Track Your Order</a>
+                  <a href="https://sleepycarelb.com/orders" class="button">Track Your Order</a>
                 </div>
 
                 <div class="footer">
-                  <p>SleepyCare © 2024. All rights reserved.</p>
+                  <p>SleepyCare | 2024..</p>
                   <p>You received this email because you placed an order on SleepyCare.com</p>
                 </div>
               </div>
@@ -206,31 +229,40 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    console.log('✅ Resend API response:', JSON.stringify(response, null, 2));
+    console.log("✅ Resend API response:", JSON.stringify(response, null, 2));
 
     if (!response || response.error) {
-      console.error('❌ Resend API error:', response?.error);
+      console.error("❌ Resend API error:", response?.error);
       return NextResponse.json(
-        { error: 'Failed to send confirmation email', details: response?.error },
+        {
+          error: "Failed to send confirmation email",
+          details: response?.error,
+        },
         { status: 500 }
       );
     }
 
-    console.log('✅ Order confirmation email sent successfully to:', body.customerEmail);
-    console.log('📬 Email ID:', response.data?.id);
+    console.log(
+      "✅ Order confirmation email sent successfully to:",
+      body.customerEmail
+    );
+    console.log("📬 Email ID:", response.data?.id);
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Confirmation email sent successfully',
+        message: "Confirmation email sent successfully",
         emailId: response.data?.id,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('❌ Order confirmation email error:', error);
+    console.error("❌ Order confirmation email error:", error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : String(error) },
+      {
+        error: "Internal server error",
+        details: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }

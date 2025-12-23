@@ -93,7 +93,7 @@ export function AnimatedCategoryGrid({ categories }: { categories: any[] }) {
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
         >
-          <Link href={`/shop?category=${category.id}`} className="group text-center block">
+          <Link href={`/shop?category=${category.id}`} className="group text-center block" prefetch={false}>
             <div className="text-5xl mb-2">
               {category.icon}
             </div>
