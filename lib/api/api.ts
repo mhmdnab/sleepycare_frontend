@@ -19,6 +19,8 @@ import {
   PartnerRead,
   PartnerCreate,
   PartnerUpdate,
+  PresignedUrlRequest,
+  PresignedUrlResponse,
 } from "./types";
 import { Product } from "../store/cart";
 
@@ -215,6 +217,49 @@ export const adminCategoriesApi = {
   },
 };
 
+// Upload API - Direct R2 upload with presigned URLs
+export const uploadApi = {
+  getPresignedUrl: async (
+    filename: string,
+    contentType: string = "image/jpeg"
+  ): Promise<PresignedUrlResponse> => {
+    const request: PresignedUrlRequest = {
+      filename,
+      content_type: contentType,
+    };
+    return apiClient.post<PresignedUrlResponse>(
+      "/admin/upload/presigned-url",
+      request
+    );
+  },
+
+  uploadToR2: async (
+    file: File
+  ): Promise<string> => {
+    // Get presigned URL from backend
+    const { upload_url, file_url } = await uploadApi.getPresignedUrl(
+      file.name,
+      file.type || "image/jpeg"
+    );
+
+    // Upload directly to R2
+    const response = await fetch(upload_url, {
+      method: "PUT",
+      body: file,
+      headers: {
+        "Content-Type": file.type || "image/jpeg",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to upload file to R2");
+    }
+
+    // Return the public URL
+    return file_url;
+  },
+};
+
 // Admin Products API
 export const adminProductsApi = {
   getAll: async (): Promise<ProductRead[]> => {
@@ -231,14 +276,15 @@ export const adminProductsApi = {
       formData.append("category_id", productData.category_id);
     }
     if (productData.image_url) {
-      // Check if image_url is a base64 string
+      // Check if image_url is a base64 string (legacy) or R2 URL
       if (
         typeof productData.image_url === "string" &&
         productData.image_url.startsWith("data:")
       ) {
         formData.append("image_base64", productData.image_url);
       } else if (typeof productData.image_url === "string") {
-        formData.append("image_base64", productData.image_url);
+        // Direct R2 URL from presigned upload
+        formData.append("image_url", productData.image_url);
       }
     }
 
@@ -266,14 +312,15 @@ export const adminProductsApi = {
       formData.append("category_id", productData.category_id);
     }
     if (productData.image_url) {
-      // Check if image_url is a base64 string
+      // Check if image_url is a base64 string (legacy) or R2 URL
       if (
         typeof productData.image_url === "string" &&
         productData.image_url.startsWith("data:")
       ) {
         formData.append("image_base64", productData.image_url);
       } else if (typeof productData.image_url === "string") {
-        formData.append("image_base64", productData.image_url);
+        // Direct R2 URL from presigned upload
+        formData.append("image_url", productData.image_url);
       }
     }
 

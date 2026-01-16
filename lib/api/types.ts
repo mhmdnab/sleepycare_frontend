@@ -149,3 +149,15 @@ export interface PartnerUpdate {
   name?: string | null;
   icon?: string | null;
 }
+
+// Upload Types
+export interface PresignedUrlRequest {
+  filename: string;
+  content_type: string;
+}
+
+export interface PresignedUrlResponse {
+  upload_url: string;
+  file_url: string;
+  key: string;
+}

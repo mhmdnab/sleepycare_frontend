@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import { ProductRead, CategoryRead } from '@/lib/api/types';
 import { formatPrice } from '@/lib/utils';
 import { useAdminProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useCategories } from '@/lib/hooks/useQueries';
+import { uploadApi } from '@/lib/api/api';
 
 interface Product {
   id: string;
@@ -30,9 +31,9 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [imageChanged, setImageChanged] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -58,26 +59,35 @@ export default function AdminProductsPage() {
     };
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImageFile(file);
       setImageChanged(true);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setImagePreview(base64String);
-        setFormData({ ...formData, image_url: base64String });
-      };
-      reader.readAsDataURL(file);
+      // Show local preview immediately
+      const localPreview = URL.createObjectURL(file);
+      setImagePreview(localPreview);
+
+      try {
+        setIsUploading(true);
+        // Upload directly to R2 and get the public URL
+        const r2Url = await uploadApi.uploadToR2(file);
+        setFormData({ ...formData, image_url: r2Url });
+      } catch (error) {
+        console.error('Failed to upload image:', error);
+        alert('Failed to upload image. Please try again.');
+        setImagePreview('');
+        setImageChanged(false);
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
   const handleAdd = () => {
     setEditingProduct(null);
-    setImageFile(null);
     setImagePreview('');
     setImageChanged(false);
+    setIsUploading(false);
     setFormData({
       name: '',
       description: '',
@@ -91,9 +101,9 @@ export default function AdminProductsPage() {
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
-    setImageFile(null);
     setImagePreview(product.image_url || '');
     setImageChanged(false);
+    setIsUploading(false);
     setFormData({
       name: product.name,
       description: product.description || '',
@@ -373,6 +383,12 @@ export default function AdminProductsPage() {
                       placeholder="Enter image URL"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
                     />
+                    {isUploading && (
+                      <div className="flex items-center space-x-2 text-primary-600">
+                        <div className="w-4 h-4 border-2 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-sm">Uploading image...</span>
+                      </div>
+                    )}
                     {imagePreview && (
                       <div className="mt-2">
                         <img
@@ -401,11 +417,12 @@ export default function AdminProductsPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setShowModal(false)}
+                    disabled={isUploading}
                   >
                     Cancel
                   </Button>
-                  <Button type="submit">
-                    {editingProduct ? 'Update' : 'Create'}
+                  <Button type="submit" disabled={isUploading}>
+                    {isUploading ? 'Uploading...' : editingProduct ? 'Update' : 'Create'}
                   </Button>
                 </div>
               </form>
