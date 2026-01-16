@@ -30,7 +30,7 @@ const toFrontendProduct = (product: ProductRead): Product => ({
   id: product.id,
   name: product.name,
   price: product.price,
-  image: product.image_url || "/placeholder-product.jpg",
+  image: product.image_url || "",
   category: product.category_id || "",
   description: product.description || "",
   stock: product.stock,

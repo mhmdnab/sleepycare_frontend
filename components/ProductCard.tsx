@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, ImageOff } from 'lucide-react';
 import { Product } from '@/lib/store/cart';
 import { useCartStore } from '@/lib/store/cart';
 import { formatPrice } from '@/lib/utils';
@@ -14,21 +15,31 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((state) => state.addItem);
+  const [imageError, setImageError] = useState(false);
 
   const handleAddToCart = () => {
     addItem(product);
   };
 
+  const hasValidImage = product.image && !product.image.includes('placeholder') && !imageError;
+
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group flex flex-col h-[420px]">
       <Link href={`/product/${product.id}`}>
         <div className="relative h-56 bg-gray-100 overflow-hidden flex-shrink-0">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {hasValidImage ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gray-200">
+              <ImageOff className="w-12 h-12 text-gray-400" />
+            </div>
+          )}
           {product.stock < 20 && (
             <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
               Low Stock

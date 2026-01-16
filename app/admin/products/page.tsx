@@ -54,7 +54,7 @@ export default function AdminProductsPage() {
       stock: p.stock,
       image_url: p.image_url,
       category_id: p.category_id,
-      image: p.image_url || '/placeholder-product.jpg',
+      image: p.image_url || '',
       category: category ? category.name : p.category_id || 'Uncategorized',
     };
   });

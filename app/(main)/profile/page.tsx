@@ -565,15 +565,19 @@ function ProfileContent() {
                       const product = getProduct(item.product_id);
                       return (
                         <div key={index} className="flex items-center gap-4">
-                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                            <img
-                              src={product?.image || '/placeholder-product.jpg'}
-                              alt={product?.name || 'Product'}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
-                              }}
-                            />
+                          <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
+                            {product?.image ? (
+                              <img
+                                src={product.image}
+                                alt={product?.name || 'Product'}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <Package className="w-8 h-8 text-gray-400" />
+                            )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">

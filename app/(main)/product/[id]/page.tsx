@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { ShoppingCart, Minus, Plus, Star, Leaf, Shield } from 'lucide-react';
+import { ShoppingCart, Minus, Plus, Star, Leaf, Shield, ImageOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ProductCard } from '@/components/ProductCard';
 import { useCartStore } from '@/lib/store/cart';
@@ -17,6 +17,7 @@ export default function ProductDetailPage() {
 
   const { data: product, isLoading: loading } = useProduct(productId);
   const [quantity, setQuantity] = useState(1);
+  const [imageError, setImageError] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   // Note: Related products would need a separate hook/query
@@ -58,13 +59,20 @@ export default function ProductDetailPage() {
           <div className="grid md:grid-cols-2 gap-8 p-6 lg:p-12">
             {/* Product Image */}
             <div className="relative h-96 md:h-[500px] bg-gray-100 rounded-lg overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
+              {product.image && !imageError ? (
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  priority
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <ImageOff className="w-24 h-24 text-gray-400" />
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
