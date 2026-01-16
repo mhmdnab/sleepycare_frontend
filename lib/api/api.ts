@@ -19,8 +19,6 @@ import {
   PartnerRead,
   PartnerCreate,
   PartnerUpdate,
-  PresignedUrlRequest,
-  PresignedUrlResponse,
 } from "./types";
 import { Product } from "../store/cart";
 
@@ -217,46 +215,19 @@ export const adminCategoriesApi = {
   },
 };
 
-// Upload API - Direct R2 upload with presigned URLs
+// Upload API - Upload through backend to R2
 export const uploadApi = {
-  getPresignedUrl: async (
-    filename: string,
-    contentType: string = "image/jpeg"
-  ): Promise<PresignedUrlResponse> => {
-    const request: PresignedUrlRequest = {
-      filename,
-      content_type: contentType,
-    };
-    return apiClient.post<PresignedUrlResponse>(
-      "/admin/upload/presigned-url",
-      request
-    );
-  },
+  uploadToR2: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  uploadToR2: async (
-    file: File
-  ): Promise<string> => {
-    // Get presigned URL from backend
-    const { upload_url, file_url } = await uploadApi.getPresignedUrl(
-      file.name,
-      file.type || "image/jpeg"
+    // Upload through backend (avoids CORS issues with direct R2 upload)
+    const response = await apiClient.postForm<{ file_url: string }>(
+      "/admin/upload/image",
+      formData
     );
 
-    // Upload directly to R2
-    const response = await fetch(upload_url, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type || "image/jpeg",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to upload file to R2");
-    }
-
-    // Return the public URL
-    return file_url;
+    return response.file_url;
   },
 };
 
