@@ -30,7 +30,7 @@ const toFrontendProduct = (product: ProductRead): Product => ({
   id: product.id,
   name: product.name,
   price: product.price,
-  image: product.image_url || "",
+  image_url: product.image_url || "",
   category: product.category_id || "",
   description: product.description || "",
   stock: product.stock,
@@ -41,7 +41,7 @@ export const authApi = {
   register: async (userData: UserCreate): Promise<TokenResponse> => {
     const response = await apiClient.post<TokenResponse>(
       "/auth/register",
-      userData
+      userData,
     );
     apiClient.setToken(response.access_token);
     return response;
@@ -91,7 +91,7 @@ export const productsApi = {
 
   getByCategory: async (categoryId: string): Promise<Product[]> => {
     const products = await apiClient.get<ProductRead[]>(
-      `/products/category/${categoryId}`
+      `/products/category/${categoryId}`,
     );
     return products.map(toFrontendProduct);
   },
@@ -103,7 +103,7 @@ export const productsApi = {
     return allProducts.filter(
       (p) =>
         p.name.toLowerCase().includes(lowerQuery) ||
-        p.description.toLowerCase().includes(lowerQuery)
+        p.description.toLowerCase().includes(lowerQuery),
     );
   },
 
@@ -151,7 +151,7 @@ export const ordersApi = {
 // Transactions API
 export const transactionsApi = {
   create: async (
-    transactionData: TransactionCreate
+    transactionData: TransactionCreate,
   ): Promise<TransactionRead> => {
     return apiClient.post<TransactionRead>("/transactions", transactionData);
   },
@@ -186,7 +186,7 @@ export const adminCategoriesApi = {
 
   update: async (
     id: string,
-    categoryData: CategoryUpdate
+    categoryData: CategoryUpdate,
   ): Promise<CategoryRead> => {
     const formData = new FormData();
     if (categoryData.name) {
@@ -224,7 +224,7 @@ export const uploadApi = {
     // Upload through backend (avoids CORS issues with direct R2 upload)
     const response = await apiClient.postForm<{ file_url: string }>(
       "/admin/upload/image",
-      formData
+      formData,
     );
 
     return response.file_url;
@@ -264,7 +264,7 @@ export const adminProductsApi = {
 
   update: async (
     id: string,
-    productData: ProductUpdate
+    productData: ProductUpdate,
   ): Promise<ProductRead> => {
     const formData = new FormData();
     if (productData.name) {
@@ -329,10 +329,10 @@ export const adminUsersApi = {
   },
 
   getOrdersCount: async (
-    id: string
+    id: string,
   ): Promise<{ user_id: string; orders_count: number }> => {
     return apiClient.get<{ user_id: string; orders_count: number }>(
-      `/admin/users/${id}/orders-count`
+      `/admin/users/${id}/orders-count`,
     );
   },
 };
@@ -378,7 +378,7 @@ export const adminPartnersApi = {
 
   update: async (
     id: string,
-    partnerData: PartnerUpdate
+    partnerData: PartnerUpdate,
   ): Promise<PartnerRead> => {
     const formData = new FormData();
     if (partnerData.name) {

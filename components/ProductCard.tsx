@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { ShoppingCart, ImageOff } from 'lucide-react';
-import { Product } from '@/lib/store/cart';
-import { useCartStore } from '@/lib/store/cart';
-import { formatPrice } from '@/lib/utils';
-import { Button } from './ui/Button';
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { ShoppingCart, ImageOff } from "lucide-react";
+import { Product } from "@/lib/store/cart";
+import { useCartStore } from "@/lib/store/cart";
+import { formatPrice } from "@/lib/utils";
+import { Button } from "./ui/Button";
 
 interface ProductCardProps {
   product: Product;
@@ -21,7 +21,10 @@ export function ProductCard({ product }: ProductCardProps) {
     addItem(product);
   };
 
-  const hasValidImage = product.image && !product.image.includes('placeholder') && !imageError;
+  const hasValidImage =
+    product.image_url &&
+    !product.image_url.includes("placeholder") &&
+    !imageError;
 
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group flex flex-col h-[420px]">
@@ -29,7 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="relative h-56 bg-gray-100 overflow-hidden flex-shrink-0">
           {hasValidImage ? (
             <Image
-              src={product.image}
+              src={product.image_url}
               alt={product.name}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-300"
