@@ -1,13 +1,19 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Edit, Trash2, Plus, Search } from 'lucide-react';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
-import { ProductRead, CategoryRead } from '@/lib/api/types';
-import { formatPrice } from '@/lib/utils';
-import { useAdminProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, useCategories } from '@/lib/hooks/useQueries';
-import { uploadApi } from '@/lib/api/api';
+import { useState } from "react";
+import { Edit, Trash2, Plus, Search } from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/Button";
+import { ProductRead, CategoryRead } from "@/lib/api/types";
+import { formatPrice } from "@/lib/utils";
+import {
+  useAdminProducts,
+  useCreateProduct,
+  useUpdateProduct,
+  useDeleteProduct,
+  useCategories,
+} from "@/lib/hooks/useQueries";
+import { uploadApi } from "@/lib/api/api";
 
 interface Product {
   id: string;
@@ -17,7 +23,6 @@ interface Product {
   stock: number;
   image_url: string | null;
   category_id: string | null;
-  image: string;
   category: string;
 }
 
@@ -28,19 +33,19 @@ export default function AdminProductsPage() {
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>('');
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [imageChanged, setImageChanged] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     price: 0,
     stock: 0,
-    image_url: '',
-    category_id: ''
+    image_url: "",
+    category_id: "",
   });
 
   // Map backend data to include image and category fields
@@ -54,8 +59,7 @@ export default function AdminProductsPage() {
       stock: p.stock,
       image_url: p.image_url,
       category_id: p.category_id,
-      image: p.image_url || '',
-      category: category ? category.name : p.category_id || 'Uncategorized',
+      category: category ? category.name : p.category_id || "Uncategorized",
     };
   });
 
@@ -73,9 +77,9 @@ export default function AdminProductsPage() {
         const r2Url = await uploadApi.uploadToR2(file);
         setFormData({ ...formData, image_url: r2Url });
       } catch (error) {
-        console.error('Failed to upload image:', error);
-        alert('Failed to upload image. Please try again.');
-        setImagePreview('');
+        console.error("Failed to upload image:", error);
+        alert("Failed to upload image. Please try again.");
+        setImagePreview("");
         setImageChanged(false);
       } finally {
         setIsUploading(false);
@@ -85,43 +89,43 @@ export default function AdminProductsPage() {
 
   const handleAdd = () => {
     setEditingProduct(null);
-    setImagePreview('');
+    setImagePreview("");
     setImageChanged(false);
     setIsUploading(false);
     setFormData({
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       price: 0,
       stock: 0,
-      image_url: '',
-      category_id: ''
+      image_url: "",
+      category_id: "",
     });
     setShowModal(true);
   };
 
   const handleEdit = (product: Product) => {
     setEditingProduct(product);
-    setImagePreview(product.image_url || '');
+    setImagePreview(product.image_url || "");
     setImageChanged(false);
     setIsUploading(false);
     setFormData({
       name: product.name,
-      description: product.description || '',
+      description: product.description || "",
       price: product.price,
       stock: product.stock,
-      image_url: '',
-      category_id: product.category_id || ''
+      image_url: "",
+      category_id: product.category_id || "",
     });
     setShowModal(true);
   };
 
   const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm("Are you sure you want to delete this product?")) {
       try {
         await deleteProduct.mutateAsync(id);
       } catch (error) {
-        console.error('Failed to delete product:', error);
-        alert('Failed to delete product');
+        console.error("Failed to delete product:", error);
+        alert("Failed to delete product");
       }
     }
   };
@@ -138,9 +142,9 @@ export default function AdminProductsPage() {
             description: formData.description || null,
             price: formData.price,
             stock: formData.stock,
-            image_url: imageChanged ? (formData.image_url || null) : undefined,
-            category_id: formData.category_id || null
-          }
+            image_url: imageChanged ? formData.image_url || null : undefined,
+            category_id: formData.category_id || null,
+          },
         });
       } else {
         await createProduct.mutateAsync({
@@ -149,18 +153,18 @@ export default function AdminProductsPage() {
           price: formData.price,
           stock: formData.stock,
           image_url: formData.image_url || null,
-          category_id: formData.category_id || null
+          category_id: formData.category_id || null,
         });
       }
       setShowModal(false);
     } catch (error) {
-      console.error('Failed to save product:', error);
-      alert('Failed to save product');
+      console.error("Failed to save product:", error);
+      alert("Failed to save product");
     }
   };
 
   const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
@@ -222,7 +226,10 @@ export default function AdminProductsPage() {
                 </tr>
               ) : filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-gray-500"
+                  >
                     No products found
                   </td>
                 </tr>
@@ -233,7 +240,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center space-x-3">
                         <div className="relative w-12 h-12 rounded overflow-hidden">
                           <Image
-                            src={product.image}
+                            src={product.image_url || "/placeholder.png"}
                             alt={product.name}
                             fill
                             className="object-cover"
@@ -241,8 +248,12 @@ export default function AdminProductsPage() {
                           />
                         </div>
                         <div>
-                          <div className="font-medium text-gray-900">{product.name}</div>
-                          <div className="text-sm text-gray-500">ID: {product.id}</div>
+                          <div className="font-medium text-gray-900">
+                            {product.name}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            ID: {product.id}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -258,8 +269,8 @@ export default function AdminProductsPage() {
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded-full ${
                           product.stock < 20
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-green-100 text-green-700'
+                            ? "bg-red-100 text-red-700"
+                            : "bg-green-100 text-green-700"
                         }`}
                       >
                         {product.stock} units
@@ -299,7 +310,7 @@ export default function AdminProductsPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 my-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
+                {editingProduct ? "Edit Product" : "Add New Product"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -310,7 +321,9 @@ export default function AdminProductsPage() {
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       placeholder="e.g., Baby Wipes"
                       required
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
@@ -322,7 +335,12 @@ export default function AdminProductsPage() {
                     </label>
                     <select
                       value={formData.category_id}
-                      onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          category_id: e.target.value,
+                        })
+                      }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none bg-white"
                     >
                       <option value="">Select a category (optional)</option>
@@ -341,7 +359,12 @@ export default function AdminProductsPage() {
                       type="number"
                       step="0.01"
                       value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          price: parseFloat(e.target.value),
+                        })
+                      }
                       required
                       min="0"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
@@ -354,7 +377,12 @@ export default function AdminProductsPage() {
                     <input
                       type="number"
                       value={formData.stock}
-                      onChange={(e) => setFormData({ ...formData, stock: parseInt(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          stock: parseInt(e.target.value),
+                        })
+                      }
                       required
                       min="0"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
@@ -406,7 +434,9 @@ export default function AdminProductsPage() {
                   </label>
                   <textarea
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     placeholder="Product description"
                     rows={3}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
@@ -422,7 +452,11 @@ export default function AdminProductsPage() {
                     Cancel
                   </Button>
                   <Button type="submit" disabled={isUploading}>
-                    {isUploading ? 'Uploading...' : editingProduct ? 'Update' : 'Create'}
+                    {isUploading
+                      ? "Uploading..."
+                      : editingProduct
+                        ? "Update"
+                        : "Create"}
                   </Button>
                 </div>
               </form>
