@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCartStore } from '@/lib/store/cart';
-import { formatPrice } from '@/lib/utils';
-import { Button } from './ui/Button';
+import { X, Plus, Minus, ShoppingBag } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCartStore } from "@/lib/store/cart";
+import { formatPrice } from "@/lib/utils";
+import { Button } from "./ui/Button";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -13,7 +13,8 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
-  const { items, updateQuantity, removeItem, getTotalPrice, clearCart } = useCartStore();
+  const { items, updateQuantity, removeItem, getTotalPrice, clearCart } =
+    useCartStore();
   const totalPrice = getTotalPrice();
 
   if (!isOpen) return null;
@@ -55,10 +56,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           ) : (
             <div className="space-y-4">
               {items.map((item) => (
-                <div key={item.id} className="flex space-x-4 bg-gray-50 p-3 rounded-lg">
+                <div
+                  key={item.id}
+                  className="flex space-x-4 bg-gray-50 p-3 rounded-lg"
+                >
                   <div className="relative w-20 h-20 flex-shrink-0 bg-white rounded">
                     <Image
-                      src={item.image}
+                      src={item.image_url}
                       alt={item.name}
                       fill
                       className="object-cover rounded"
@@ -76,7 +80,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center space-x-2">
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                           className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
                         >
                           <Minus className="w-3 h-3" />
@@ -85,7 +91,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           {item.quantity}
                         </span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                           className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100"
                         >
                           <Plus className="w-3 h-3" />
@@ -111,7 +119,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <div className="border-t p-4 space-y-4">
             <div className="flex justify-between text-lg font-bold">
               <span>Total:</span>
-              <span className="text-primary-600">{formatPrice(totalPrice)}</span>
+              <span className="text-primary-600">
+                {formatPrice(totalPrice)}
+              </span>
             </div>
 
             <Link href="/checkout" className="block">

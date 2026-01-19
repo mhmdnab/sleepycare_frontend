@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Package, Clock, CheckCircle, XCircle, Eye } from 'lucide-react';
-import { useOrders, useProducts } from '@/lib/hooks/useQueries';
-import { formatPrice } from '@/lib/utils';
-import { OrderRead } from '@/lib/api/types';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Package, Clock, CheckCircle, XCircle, Eye } from "lucide-react";
+import { useOrders, useProducts } from "@/lib/hooks/useQueries";
+import { formatPrice } from "@/lib/utils";
+import { OrderRead } from "@/lib/api/types";
 
 export default function OrdersPage() {
   const { data: orders = [], isLoading } = useOrders();
@@ -15,18 +15,18 @@ export default function OrdersPage() {
 
   // Helper to get product details by ID
   const getProduct = (productId: string) => {
-    return products.find(p => p.id === productId);
+    return products.find((p) => p.id === productId);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'delivered':
+      case "delivered":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'cancelled':
+      case "cancelled":
         return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'pending':
+      case "pending":
         return <Clock className="w-5 h-5 text-yellow-500" />;
-      case 'processing':
+      case "processing":
         return <Package className="w-5 h-5 text-blue-500" />;
       default:
         return <Package className="w-5 h-5 text-gray-500" />;
@@ -35,16 +35,16 @@ export default function OrdersPage() {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'delivered':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'processing':
-        return 'bg-blue-100 text-blue-800';
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "processing":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -75,8 +75,12 @@ export default function OrdersPage() {
         {orders.length === 0 ? (
           <div className="text-center py-12">
             <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No orders yet</h3>
-            <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              No orders yet
+            </h3>
+            <p className="text-gray-600 mb-6">
+              Start shopping to see your orders here
+            </p>
             <a
               href="/shop"
               className="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition-colors"
@@ -101,7 +105,7 @@ export default function OrdersPage() {
                       </h3>
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                          order.status
+                          order.status,
                         )}`}
                       >
                         <div className="flex items-center gap-1">
@@ -111,14 +115,16 @@ export default function OrdersPage() {
                       </span>
                     </div>
                     <p className="text-sm text-gray-600 mb-1">
-                      Placed on {new Date(order.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
+                      Placed on{" "}
+                      {new Date(order.created_at).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </p>
                     <p className="text-sm text-gray-600">
-                      {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                      {order.items.length}{" "}
+                      {order.items.length === 1 ? "item" : "items"}
                     </p>
                   </div>
 
@@ -159,7 +165,8 @@ export default function OrdersPage() {
                     Order #{selectedOrder.id.slice(0, 8)}
                   </h2>
                   <p className="text-sm text-gray-600">
-                    Placed on {new Date(selectedOrder.created_at).toLocaleDateString()}
+                    Placed on{" "}
+                    {new Date(selectedOrder.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <button
@@ -172,10 +179,12 @@ export default function OrdersPage() {
 
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-sm font-medium text-gray-700">Status:</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    Status:
+                  </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      selectedOrder.status
+                      selectedOrder.status,
                     )}`}
                   >
                     <div className="flex items-center gap-1">
@@ -186,20 +195,23 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Order Items</h3>
+                  <h3 className="font-semibold text-gray-900 mb-3">
+                    Order Items
+                  </h3>
                   <div className="space-y-4">
                     {selectedOrder.items.map((item, index) => {
                       const product = getProduct(item.product_id);
                       return (
                         <div key={index} className="flex items-center gap-4">
                           <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                            {product?.image ? (
+                            {product?.image_url ? (
                               <img
-                                src={product.image}
-                                alt={product?.name || 'Product'}
+                                src={product.image_url}
+                                alt={product?.name || "Product"}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = 'none';
+                                  (e.target as HTMLImageElement).style.display =
+                                    "none";
                                 }}
                               />
                             ) : (
@@ -208,10 +220,12 @@ export default function OrdersPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">
-                              {product?.name || `Product #${item.product_id.slice(0, 8)}`}
+                              {product?.name ||
+                                `Product #${item.product_id.slice(0, 8)}`}
                             </p>
                             <p className="text-sm text-gray-600">
-                              Qty: {item.quantity} × {formatPrice(item.unit_price)}
+                              Qty: {item.quantity} ×{" "}
+                              {formatPrice(item.unit_price)}
                             </p>
                           </div>
                           <p className="font-semibold text-gray-900 flex-shrink-0">

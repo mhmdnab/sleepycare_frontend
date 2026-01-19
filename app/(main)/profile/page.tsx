@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect, Suspense } from 'react';
-import { motion } from 'framer-motion';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from "react";
+import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   User,
   Package,
@@ -16,12 +16,12 @@ import {
   Edit2,
   Save,
   X,
-} from 'lucide-react';
-import { useOrders, useProducts } from '@/lib/hooks/useQueries';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { formatPrice } from '@/lib/utils';
-import { OrderRead } from '@/lib/api/types';
-import { Button } from '@/components/ui/Button';
+} from "lucide-react";
+import { useOrders, useProducts } from "@/lib/hooks/useQueries";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { formatPrice } from "@/lib/utils";
+import { OrderRead } from "@/lib/api/types";
+import { Button } from "@/components/ui/Button";
 
 function ProfileContent() {
   const router = useRouter();
@@ -30,26 +30,28 @@ function ProfileContent() {
   const { data: orders = [], isLoading: ordersLoading } = useOrders();
   const { data: products = [] } = useProducts();
 
-  const [activeTab, setActiveTab] = useState<'orders' | 'profile' | 'settings'>('orders');
+  const [activeTab, setActiveTab] = useState<"orders" | "profile" | "settings">(
+    "orders",
+  );
   const [selectedOrder, setSelectedOrder] = useState<OrderRead | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
   });
 
   // Handle tab from URL query parameter
   useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'settings' || tab === 'profile' || tab === 'orders') {
+    const tab = searchParams.get("tab");
+    if (tab === "settings" || tab === "profile" || tab === "orders") {
       setActiveTab(tab);
     }
   }, [searchParams]);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      router.push('/auth/login');
+      router.push("/auth/login");
     }
   }, [isAuthenticated, router]);
 
@@ -63,19 +65,19 @@ function ProfileContent() {
   }, [user]);
 
   const getProduct = (productId: string) => {
-    return products.find(p => p.id === productId);
+    return products.find((p) => p.id === productId);
   };
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'delivered':
+      case "delivered":
         return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case 'cancelled':
+      case "cancelled":
         return <XCircle className="w-5 h-5 text-red-500" />;
-      case 'pending':
+      case "pending":
         return <Clock className="w-5 h-5 text-yellow-500" />;
-      case 'processing':
-      case 'shipped':
+      case "processing":
+      case "shipped":
         return <Truck className="w-5 h-5 text-blue-500" />;
       default:
         return <Package className="w-5 h-5 text-gray-500" />;
@@ -84,29 +86,29 @@ function ProfileContent() {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'delivered':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'processing':
-      case 'shipped':
-        return 'bg-blue-100 text-blue-800';
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "processing":
+      case "shipped":
+        return "bg-blue-100 text-blue-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getStatusStep = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'pending':
+      case "pending":
         return 1;
-      case 'processing':
+      case "processing":
         return 2;
-      case 'shipped':
+      case "shipped":
         return 3;
-      case 'delivered':
+      case "delivered":
         return 4;
       default:
         return 0;
@@ -115,7 +117,7 @@ function ProfileContent() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    router.push("/");
   };
 
   const handleSaveProfile = () => {
@@ -149,7 +151,9 @@ function ProfileContent() {
                   <User className="w-8 h-8 text-primary-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">{user.name}</h1>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {user.name}
+                  </h1>
                   <p className="text-gray-600">{user.email}</p>
                 </div>
               </div>
@@ -157,7 +161,7 @@ function ProfileContent() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setActiveTab('settings')}
+                  onClick={() => setActiveTab("settings")}
                   className="flex items-center gap-2"
                 >
                   <Settings className="w-4 h-4" />
@@ -179,11 +183,11 @@ function ProfileContent() {
           {/* Tabs */}
           <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
             <button
-              onClick={() => setActiveTab('orders')}
+              onClick={() => setActiveTab("orders")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                activeTab === 'orders'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                activeTab === "orders"
+                  ? "bg-primary-600 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -192,11 +196,11 @@ function ProfileContent() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('profile')}
+              onClick={() => setActiveTab("profile")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                activeTab === 'profile'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                activeTab === "profile"
+                  ? "bg-primary-600 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -205,11 +209,11 @@ function ProfileContent() {
               </div>
             </button>
             <button
-              onClick={() => setActiveTab('settings')}
+              onClick={() => setActiveTab("settings")}
               className={`px-4 py-2 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                activeTab === 'settings'
-                  ? 'bg-primary-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                activeTab === "settings"
+                  ? "bg-primary-600 text-white"
+                  : "bg-white text-gray-700 hover:bg-gray-100"
               }`}
             >
               <div className="flex items-center gap-2">
@@ -222,9 +226,11 @@ function ProfileContent() {
           {/* Tab Content */}
           <div className="bg-white rounded-xl shadow-md">
             {/* Orders Tab */}
-            {activeTab === 'orders' && (
+            {activeTab === "orders" && (
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Order Tracking</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Order Tracking
+                </h2>
 
                 {ordersLoading ? (
                   <div className="flex justify-center py-12">
@@ -233,9 +239,15 @@ function ProfileContent() {
                 ) : orders.length === 0 ? (
                   <div className="text-center py-12">
                     <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No orders yet</h3>
-                    <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
-                    <Button onClick={() => router.push('/shop')}>Start Shopping</Button>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      No orders yet
+                    </h3>
+                    <p className="text-gray-600 mb-6">
+                      Start shopping to see your orders here
+                    </p>
+                    <Button onClick={() => router.push("/shop")}>
+                      Start Shopping
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -254,7 +266,7 @@ function ProfileContent() {
                               </h3>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor(
-                                  order.status
+                                  order.status,
                                 )}`}
                               >
                                 {getStatusIcon(order.status)}
@@ -263,16 +275,25 @@ function ProfileContent() {
                             </div>
 
                             {/* Order Tracking Progress */}
-                            {order.status.toLowerCase() !== 'cancelled' && (
+                            {order.status.toLowerCase() !== "cancelled" && (
                               <div className="mt-4 mb-4">
                                 <div className="flex items-center justify-between mb-2">
-                                  {['Pending', 'Processing', 'Shipped', 'Delivered'].map((step, index) => (
-                                    <div key={step} className="flex flex-col items-center flex-1">
+                                  {[
+                                    "Pending",
+                                    "Processing",
+                                    "Shipped",
+                                    "Delivered",
+                                  ].map((step, index) => (
+                                    <div
+                                      key={step}
+                                      className="flex flex-col items-center flex-1"
+                                    >
                                       <div
                                         className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                          getStatusStep(order.status) >= index + 1
-                                            ? 'bg-primary-600 text-white'
-                                            : 'bg-gray-200 text-gray-500'
+                                          getStatusStep(order.status) >=
+                                          index + 1
+                                            ? "bg-primary-600 text-white"
+                                            : "bg-gray-200 text-gray-500"
                                         }`}
                                       >
                                         {index + 1}
@@ -295,15 +316,19 @@ function ProfileContent() {
                             )}
 
                             <p className="text-sm text-gray-600">
-                              Placed on{' '}
-                              {new Date(order.created_at).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              })}
+                              Placed on{" "}
+                              {new Date(order.created_at).toLocaleDateString(
+                                "en-US",
+                                {
+                                  year: "numeric",
+                                  month: "long",
+                                  day: "numeric",
+                                },
+                              )}
                             </p>
                             <p className="text-sm text-gray-600">
-                              {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                              {order.items.length}{" "}
+                              {order.items.length === 1 ? "item" : "items"}
                             </p>
                           </div>
 
@@ -334,10 +359,12 @@ function ProfileContent() {
             )}
 
             {/* Profile Tab */}
-            {activeTab === 'profile' && (
+            {activeTab === "profile" && (
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-gray-900">Update Profile</h2>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Update Profile
+                  </h2>
                   {!isEditing ? (
                     <Button
                       variant="outline"
@@ -355,7 +382,10 @@ function ProfileContent() {
                         size="sm"
                         onClick={() => {
                           setIsEditing(false);
-                          setProfileData({ name: user.name, email: user.email });
+                          setProfileData({
+                            name: user.name,
+                            email: user.email,
+                          });
                         }}
                         className="flex items-center gap-2"
                       >
@@ -382,10 +412,12 @@ function ProfileContent() {
                     <input
                       type="text"
                       value={profileData.name}
-                      onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                      onChange={(e) =>
+                        setProfileData({ ...profileData, name: e.target.value })
+                      }
                       disabled={!isEditing}
                       className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
-                        isEditing ? 'bg-white' : 'bg-gray-100'
+                        isEditing ? "bg-white" : "bg-gray-100"
                       }`}
                     />
                   </div>
@@ -396,10 +428,15 @@ function ProfileContent() {
                     <input
                       type="email"
                       value={profileData.email}
-                      onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
+                      onChange={(e) =>
+                        setProfileData({
+                          ...profileData,
+                          email: e.target.value,
+                        })
+                      }
                       disabled={!isEditing}
                       className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 ${
-                        isEditing ? 'bg-white' : 'bg-gray-100'
+                        isEditing ? "bg-white" : "bg-gray-100"
                       }`}
                     />
                   </div>
@@ -409,11 +446,14 @@ function ProfileContent() {
                     </label>
                     <input
                       type="text"
-                      value={new Date(user.created_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
+                      value={new Date(user.created_at).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
                       disabled
                       className="w-full px-4 py-2 border rounded-lg bg-gray-100"
                     />
@@ -423,20 +463,24 @@ function ProfileContent() {
             )}
 
             {/* Settings Tab */}
-            {activeTab === 'settings' && (
+            {activeTab === "settings" && (
               <div className="p-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6">Account Settings</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  Account Settings
+                </h2>
 
                 <div className="space-y-6 max-w-md">
                   {/* Change Password */}
                   <div className="border rounded-lg p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2">Change Password</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Change Password
+                    </h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Update your password to keep your account secure
                     </p>
                     <Button
                       variant="outline"
-                      onClick={() => router.push('/auth/forgot-password')}
+                      onClick={() => router.push("/auth/forgot-password")}
                     >
                       Change Password
                     </Button>
@@ -444,31 +488,53 @@ function ProfileContent() {
 
                   {/* Notifications */}
                   <div className="border rounded-lg p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2">Email Notifications</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Email Notifications
+                    </h3>
                     <p className="text-sm text-gray-600 mb-4">
                       Manage your email notification preferences
                     </p>
                     <div className="space-y-3">
                       <label className="flex items-center gap-3">
-                        <input type="checkbox" defaultChecked className="w-4 h-4 text-primary-600" />
-                        <span className="text-sm text-gray-700">Order updates</span>
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="w-4 h-4 text-primary-600"
+                        />
+                        <span className="text-sm text-gray-700">
+                          Order updates
+                        </span>
                       </label>
                       <label className="flex items-center gap-3">
-                        <input type="checkbox" defaultChecked className="w-4 h-4 text-primary-600" />
-                        <span className="text-sm text-gray-700">Promotions and offers</span>
+                        <input
+                          type="checkbox"
+                          defaultChecked
+                          className="w-4 h-4 text-primary-600"
+                        />
+                        <span className="text-sm text-gray-700">
+                          Promotions and offers
+                        </span>
                       </label>
                       <label className="flex items-center gap-3">
-                        <input type="checkbox" className="w-4 h-4 text-primary-600" />
-                        <span className="text-sm text-gray-700">Newsletter</span>
+                        <input
+                          type="checkbox"
+                          className="w-4 h-4 text-primary-600"
+                        />
+                        <span className="text-sm text-gray-700">
+                          Newsletter
+                        </span>
                       </label>
                     </div>
                   </div>
 
                   {/* Danger Zone */}
                   <div className="border border-red-200 rounded-lg p-4 bg-red-50">
-                    <h3 className="font-semibold text-red-700 mb-2">Danger Zone</h3>
+                    <h3 className="font-semibold text-red-700 mb-2">
+                      Danger Zone
+                    </h3>
                     <p className="text-sm text-red-600 mb-4">
-                      Once you delete your account, there is no going back. Please be certain.
+                      Once you delete your account, there is no going back.
+                      Please be certain.
                     </p>
                     <Button
                       variant="outline"
@@ -497,19 +563,19 @@ function ProfileContent() {
               Discover More Products
             </h2>
             <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-              Explore our wide range of premium quality wipes. From baby care to household cleaning,
-              we have got you covered.
+              Explore our wide range of premium quality wipes. From baby care to
+              household cleaning, we have got you covered.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                onClick={() => router.push('/shop')}
+                onClick={() => router.push("/shop")}
                 className="bg-white text-primary-600 hover:bg-gray-100"
               >
                 Browse Products
               </Button>
               <Button
                 variant="outline"
-                onClick={() => router.push('/contact')}
+                onClick={() => router.push("/contact")}
                 className="border-white text-white hover:bg-primary-500"
               >
                 Contact Support
@@ -534,7 +600,8 @@ function ProfileContent() {
                     Order #{selectedOrder.id.slice(0, 8)}
                   </h2>
                   <p className="text-sm text-gray-600">
-                    Placed on {new Date(selectedOrder.created_at).toLocaleDateString()}
+                    Placed on{" "}
+                    {new Date(selectedOrder.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <button
@@ -547,10 +614,12 @@ function ProfileContent() {
 
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-4">
-                  <span className="text-sm font-medium text-gray-700">Status:</span>
+                  <span className="text-sm font-medium text-gray-700">
+                    Status:
+                  </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getStatusColor(
-                      selectedOrder.status
+                      selectedOrder.status,
                     )}`}
                   >
                     {getStatusIcon(selectedOrder.status)}
@@ -559,20 +628,23 @@ function ProfileContent() {
                 </div>
 
                 <div className="border-t border-gray-200 pt-4">
-                  <h3 className="font-semibold text-gray-900 mb-3">Order Items</h3>
+                  <h3 className="font-semibold text-gray-900 mb-3">
+                    Order Items
+                  </h3>
                   <div className="space-y-4">
                     {selectedOrder.items.map((item, index) => {
                       const product = getProduct(item.product_id);
                       return (
                         <div key={index} className="flex items-center gap-4">
                           <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 flex items-center justify-center">
-                            {product?.image ? (
+                            {product?.image_url ? (
                               <img
-                                src={product.image}
-                                alt={product?.name || 'Product'}
+                                src={product.image_url}
+                                alt={product?.name || "Product"}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  (e.target as HTMLImageElement).style.display = 'none';
+                                  (e.target as HTMLImageElement).style.display =
+                                    "none";
                                 }}
                               />
                             ) : (
@@ -581,10 +653,12 @@ function ProfileContent() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="font-medium text-gray-900 truncate">
-                              {product?.name || `Product #${item.product_id.slice(0, 8)}`}
+                              {product?.name ||
+                                `Product #${item.product_id.slice(0, 8)}`}
                             </p>
                             <p className="text-sm text-gray-600">
-                              Qty: {item.quantity} × {formatPrice(item.unit_price)}
+                              Qty: {item.quantity} ×{" "}
+                              {formatPrice(item.unit_price)}
                             </p>
                           </div>
                           <p className="font-semibold text-gray-900 flex-shrink-0">
@@ -635,13 +709,15 @@ function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-center items-center min-h-[400px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <ProfileContent />
     </Suspense>
   );
