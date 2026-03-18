@@ -237,7 +237,7 @@ export const adminProductsApi = {
     return apiClient.get<ProductRead[]>("/products");
   },
 
-  create: async (productData: ProductCreate): Promise<ProductRead> => {
+  create: async (productData: ProductCreate, imageFile?: File): Promise<ProductRead> => {
     const formData = new FormData();
     formData.append("name", productData.name);
     formData.append("description", productData.description || "");
@@ -246,17 +246,11 @@ export const adminProductsApi = {
     if (productData.category_id) {
       formData.append("category_id", productData.category_id);
     }
-    if (productData.image_url) {
-      // Check if image_url is a base64 string (legacy) or R2 URL
-      if (
-        typeof productData.image_url === "string" &&
-        productData.image_url.startsWith("data:")
-      ) {
-        formData.append("image_base64", productData.image_url);
-      } else if (typeof productData.image_url === "string") {
-        // Direct R2 URL from presigned upload
-        formData.append("image_url", productData.image_url);
-      }
+    if (imageFile) {
+      // Send the file directly - backend multer handles R2 upload
+      formData.append("image", imageFile);
+    } else if (productData.image_url) {
+      formData.append("image_url", productData.image_url);
     }
 
     return apiClient.postForm<ProductRead>("/admin/products", formData);
@@ -265,6 +259,7 @@ export const adminProductsApi = {
   update: async (
     id: string,
     productData: ProductUpdate,
+    imageFile?: File,
   ): Promise<ProductRead> => {
     const formData = new FormData();
     if (productData.name) {
@@ -282,17 +277,10 @@ export const adminProductsApi = {
     if (productData.category_id) {
       formData.append("category_id", productData.category_id);
     }
-    if (productData.image_url) {
-      // Check if image_url is a base64 string (legacy) or R2 URL
-      if (
-        typeof productData.image_url === "string" &&
-        productData.image_url.startsWith("data:")
-      ) {
-        formData.append("image_base64", productData.image_url);
-      } else if (typeof productData.image_url === "string") {
-        // Direct R2 URL from presigned upload
-        formData.append("image_url", productData.image_url);
-      }
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else if (productData.image_url) {
+      formData.append("image_url", productData.image_url);
     }
 
     return apiClient.putForm<ProductRead>(`/admin/products/${id}`, formData);
