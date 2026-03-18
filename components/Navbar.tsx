@@ -11,6 +11,7 @@ import {
   Package,
   Settings,
 } from "lucide-react";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/lib/store/cart";
@@ -111,6 +112,7 @@ export function Navbar() {
                           href={`/shop?category=${category.id}`}
                           onClick={() => setCategoriesOpen(false)}
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                          prefetch={false}
                         >
                           {category.name}
                         </Link>
@@ -270,6 +272,7 @@ export function Navbar() {
                     href={`/shop?category=${category.id}`}
                     className="block py-2 pl-4 text-gray-600 hover:text-primary-600"
                     onClick={() => setMobileMenuOpen(false)}
+                    prefetch={false}
                   >
                     {category.icon && (
                       <span className="mr-2">{category.icon}</span>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Leaf, Shield, Heart, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ProductCard } from "@/components/ProductCard";
+import { InstagramEmbed } from "react-social-media-embed";
 import {
   useBestSellers,
   useCategories,
@@ -269,12 +270,34 @@ export default function HomePage() {
           <AnimatedSection>
             <h2 className="text-4xl lg:text-5xl font-pacifico text-center text-gray-900 mb-4">
               come join the fun{" "}
-              <span className="text-primary-600">@sleepycare</span>
+              <span className="text-primary-600">@sleepycare.lb</span>
             </h2>
             <p className="text-center text-gray-600 mb-12">
-              Follow us on social media
+              Follow us on Instagram for updates and tips
             </p>
           </AnimatedSection>
+
+          {/* Instagram Embeds */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 max-w-6xl mx-auto">
+            <div className="flex justify-center">
+              <InstagramEmbed
+                url="https://www.instagram.com/p/DSLRCfFkdKS/"
+                width="100%"
+              />
+            </div>
+            <div className="flex justify-center">
+              <InstagramEmbed
+                url="https://www.instagram.com/p/DSMck9NCRvn/"
+                width="100%"
+              />
+            </div>
+            <div className="flex justify-center">
+              <InstagramEmbed
+                url="https://www.instagram.com/p/DSEog3fjOeQ/"
+                width="100%"
+              />
+            </div>
+          </div>
 
           <AnimatedSocialGrid products={bestSellers} />
         </div>
