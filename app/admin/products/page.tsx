@@ -75,7 +75,7 @@ export default function AdminProductsPage() {
         setIsUploading(true);
         // Upload directly to R2 and get the public URL
         const r2Url = await uploadApi.uploadToR2(file);
-        setFormData({ ...formData, image_url: r2Url });
+        setFormData((prev) => ({ ...prev, image_url: r2Url }));
       } catch (error) {
         console.error("Failed to upload image:", error);
         alert("Failed to upload image. Please try again.");
