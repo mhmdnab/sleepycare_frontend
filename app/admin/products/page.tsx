@@ -75,6 +75,7 @@ export default function AdminProductsPage() {
         setIsUploading(true);
         // Upload directly to R2 and get the public URL
         const r2Url = await uploadApi.uploadToR2(file);
+        console.log("R2 upload success, URL:", r2Url);
         setFormData((prev) => ({ ...prev, image_url: r2Url }));
       } catch (error) {
         console.error("Failed to upload image:", error);
@@ -132,6 +133,7 @@ export default function AdminProductsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting product with image_url:", formData.image_url);
     try {
       if (editingProduct) {
         // Only include image_url if it was changed
@@ -322,7 +324,7 @@ export default function AdminProductsPage() {
                       type="text"
                       value={formData.name}
                       onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
+                        setFormData((prev) => ({ ...prev, name: e.target.value }))
                       }
                       placeholder="e.g., Baby Wipes"
                       required
@@ -336,10 +338,10 @@ export default function AdminProductsPage() {
                     <select
                       value={formData.category_id}
                       onChange={(e) =>
-                        setFormData({
-                          ...formData,
+                        setFormData((prev) => ({
+                          ...prev,
                           category_id: e.target.value,
-                        })
+                        }))
                       }
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none bg-white"
                     >
@@ -360,10 +362,10 @@ export default function AdminProductsPage() {
                       step="0.01"
                       value={formData.price}
                       onChange={(e) =>
-                        setFormData({
-                          ...formData,
+                        setFormData((prev) => ({
+                          ...prev,
                           price: parseFloat(e.target.value),
-                        })
+                        }))
                       }
                       required
                       min="0"
@@ -378,10 +380,10 @@ export default function AdminProductsPage() {
                       type="number"
                       value={formData.stock}
                       onChange={(e) =>
-                        setFormData({
-                          ...formData,
+                        setFormData((prev) => ({
+                          ...prev,
                           stock: parseInt(e.target.value),
-                        })
+                        }))
                       }
                       required
                       min="0"
@@ -405,8 +407,9 @@ export default function AdminProductsPage() {
                       type="url"
                       value={formData.image_url}
                       onChange={(e) => {
-                        setFormData({ ...formData, image_url: e.target.value });
-                        setImagePreview(e.target.value);
+                        const val = e.target.value;
+                        setFormData((prev) => ({ ...prev, image_url: val }));
+                        setImagePreview(val);
                       }}
                       placeholder="Enter image URL"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
@@ -435,7 +438,7 @@ export default function AdminProductsPage() {
                   <textarea
                     value={formData.description}
                     onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
+                      setFormData((prev) => ({ ...prev, description: e.target.value }))
                     }
                     placeholder="Product description"
                     rows={3}
