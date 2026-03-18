@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Heart, Star } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { ProductCard } from '@/components/ProductCard';
-import { Product } from '@/lib/store/cart';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import { Heart, Star } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { ProductCard } from "@/components/ProductCard";
+import { Product } from "@/lib/store/cart";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
+  transition: { duration: 0.6 },
 };
 
 const staggerContainer = {
   animate: {
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 interface AnimatedSectionProps {
@@ -33,19 +33,23 @@ export function AnimatedHero({ children }: { children: React.ReactNode }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
     >
       {children}
     </motion.div>
   );
 }
 
-export function AnimatedSection({ children, className = '', delay = 0 }: AnimatedSectionProps) {
+export function AnimatedSection({
+  children,
+  className = "",
+  delay = 0,
+}: AnimatedSectionProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-100px' }}
+      viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.6, delay }}
       className={className}
     >
@@ -64,10 +68,7 @@ export function AnimatedProductGrid({ products }: { products: Product[] }) {
       className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
     >
       {products.map((product, index) => (
-        <motion.div
-          key={product.id}
-          variants={fadeInUp}
-        >
+        <motion.div key={product.id} variants={fadeInUp}>
           <ProductCard product={product} />
         </motion.div>
       ))}
@@ -89,7 +90,7 @@ export function AnimatedCategoryGrid({ categories }: { categories: any[] }) {
           key={category.id}
           variants={{
             initial: { opacity: 0, scale: 0.8 },
-            animate: { opacity: 1, scale: 1 }
+            animate: { opacity: 1, scale: 1 },
           }}
           whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
         >
@@ -106,7 +107,7 @@ export function AnimatedCategoryGrid({ categories }: { categories: any[] }) {
 }
 
 export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
-  console.log('Partners data:', partners);
+  console.log("Partners data:", partners);
 
   if (!partners || partners.length === 0) {
     return (
@@ -129,7 +130,7 @@ export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
           key={partner.id || index}
           variants={{
             initial: { opacity: 0, y: 20 },
-            animate: { opacity: 1, y: 0 }
+            animate: { opacity: 1, y: 0 },
           }}
           whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
           className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow w-full"
@@ -141,13 +142,16 @@ export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
                 alt={partner.name}
                 className="h-16 w-auto object-contain"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"%3E%3Crect x="3" y="3" width="18" height="18" rx="2" ry="2"%3E%3C/rect%3E%3Cline x1="3" y1="9" x2="21" y2="9"%3E%3C/line%3E%3Cline x1="9" y1="21" x2="9" y2="9"%3E%3C/line%3E%3C/svg%3E';
+                  (e.target as HTMLImageElement).src =
+                    'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"%3E%3Crect x="3" y="3" width="18" height="18" rx="2" ry="2"%3E%3C/rect%3E%3Cline x1="3" y1="9" x2="21" y2="9"%3E%3C/line%3E%3Cline x1="9" y1="21" x2="9" y2="9"%3E%3C/line%3E%3C/svg%3E';
                 }}
               />
             ) : (
               <div className="text-4xl text-gray-400">🏢</div>
             )}
-            <p className="text-sm font-medium text-gray-700 text-center">{partner.name}</p>
+            <p className="text-sm font-medium text-gray-700 text-center">
+              {partner.name}
+            </p>
           </div>
         </motion.div>
       ))}
@@ -155,7 +159,11 @@ export function AnimatedPartnerGrid({ partners }: { partners: any[] }) {
   );
 }
 
-export function AnimatedTestimonialGrid({ testimonials }: { testimonials: any[] }) {
+export function AnimatedTestimonialGrid({
+  testimonials,
+}: {
+  testimonials: any[];
+}) {
   return (
     <motion.div
       variants={staggerContainer}
@@ -203,13 +211,13 @@ export function AnimatedSocialGrid({ products }: { products: Product[] }) {
           key={product.id}
           variants={{
             initial: { opacity: 0, scale: 0.9 },
-            animate: { opacity: 1, scale: 1 }
+            animate: { opacity: 1, scale: 1 },
           }}
           whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
           className="aspect-square relative rounded-lg overflow-hidden group cursor-pointer"
         >
           <Image
-            src={product.image}
+            src={product.image_url}
             alt={product.name}
             fill
             className="object-cover"

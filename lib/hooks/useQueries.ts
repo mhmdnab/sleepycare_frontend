@@ -74,7 +74,8 @@ export const useCreateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ProductCreate) => adminProductsApi.create(data),
+    mutationFn: ({ data, imageFile }: { data: ProductCreate; imageFile?: File }) =>
+      adminProductsApi.create(data, imageFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
@@ -86,8 +87,8 @@ export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ProductUpdate }) =>
-      adminProductsApi.update(id, data),
+    mutationFn: ({ id, data, imageFile }: { id: string; data: ProductUpdate; imageFile?: File }) =>
+      adminProductsApi.update(id, data, imageFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });

@@ -19,8 +19,6 @@ import {
   PartnerRead,
   PartnerCreate,
   PartnerUpdate,
-  PresignedUrlRequest,
-  PresignedUrlResponse,
 } from "./types";
 import { Product } from "../store/cart";
 
@@ -32,7 +30,7 @@ const toFrontendProduct = (product: ProductRead): Product => ({
   id: product.id,
   name: product.name,
   price: product.price,
-  image: product.image_url || "/placeholder-product.jpg",
+  image_url: product.image_url || "",
   category: product.category_id || "",
   description: product.description || "",
   stock: product.stock,
@@ -43,7 +41,7 @@ export const authApi = {
   register: async (userData: UserCreate): Promise<TokenResponse> => {
     const response = await apiClient.post<TokenResponse>(
       "/auth/register",
-      userData
+      userData,
     );
     apiClient.setToken(response.access_token);
     return response;
@@ -93,7 +91,7 @@ export const productsApi = {
 
   getByCategory: async (categoryId: string): Promise<Product[]> => {
     const products = await apiClient.get<ProductRead[]>(
-      `/products/category/${categoryId}`
+      `/products/category/${categoryId}`,
     );
     return products.map(toFrontendProduct);
   },
@@ -105,7 +103,7 @@ export const productsApi = {
     return allProducts.filter(
       (p) =>
         p.name.toLowerCase().includes(lowerQuery) ||
-        p.description.toLowerCase().includes(lowerQuery)
+        p.description.toLowerCase().includes(lowerQuery),
     );
   },
 
@@ -153,7 +151,7 @@ export const ordersApi = {
 // Transactions API
 export const transactionsApi = {
   create: async (
-    transactionData: TransactionCreate
+    transactionData: TransactionCreate,
   ): Promise<TransactionRead> => {
     return apiClient.post<TransactionRead>("/transactions", transactionData);
   },
@@ -188,7 +186,7 @@ export const adminCategoriesApi = {
 
   update: async (
     id: string,
-    categoryData: CategoryUpdate
+    categoryData: CategoryUpdate,
   ): Promise<CategoryRead> => {
     const formData = new FormData();
     if (categoryData.name) {
@@ -217,46 +215,19 @@ export const adminCategoriesApi = {
   },
 };
 
-// Upload API - Direct R2 upload with presigned URLs
+// Upload API - Upload through backend to R2
 export const uploadApi = {
-  getPresignedUrl: async (
-    filename: string,
-    contentType: string = "image/jpeg"
-  ): Promise<PresignedUrlResponse> => {
-    const request: PresignedUrlRequest = {
-      filename,
-      content_type: contentType,
-    };
-    return apiClient.post<PresignedUrlResponse>(
-      "/admin/upload/presigned-url",
-      request
-    );
-  },
+  uploadToR2: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-  uploadToR2: async (
-    file: File
-  ): Promise<string> => {
-    // Get presigned URL from backend
-    const { upload_url, file_url } = await uploadApi.getPresignedUrl(
-      file.name,
-      file.type || "image/jpeg"
+    // Upload through backend (avoids CORS issues with direct R2 upload)
+    const response = await apiClient.postForm<{ file_url: string }>(
+      "/admin/upload/image",
+      formData,
     );
 
-    // Upload directly to R2
-    const response = await fetch(upload_url, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type || "image/jpeg",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to upload file to R2");
-    }
-
-    // Return the public URL
-    return file_url;
+    return response.file_url;
   },
 };
 
@@ -266,7 +237,7 @@ export const adminProductsApi = {
     return apiClient.get<ProductRead[]>("/products");
   },
 
-  create: async (productData: ProductCreate): Promise<ProductRead> => {
+  create: async (productData: ProductCreate, imageFile?: File): Promise<ProductRead> => {
     const formData = new FormData();
     formData.append("name", productData.name);
     formData.append("description", productData.description || "");
@@ -275,17 +246,11 @@ export const adminProductsApi = {
     if (productData.category_id) {
       formData.append("category_id", productData.category_id);
     }
-    if (productData.image_url) {
-      // Check if image_url is a base64 string (legacy) or R2 URL
-      if (
-        typeof productData.image_url === "string" &&
-        productData.image_url.startsWith("data:")
-      ) {
-        formData.append("image_base64", productData.image_url);
-      } else if (typeof productData.image_url === "string") {
-        // Direct R2 URL from presigned upload
-        formData.append("image_url", productData.image_url);
-      }
+    if (imageFile) {
+      // Send the file directly - backend multer handles R2 upload
+      formData.append("image", imageFile);
+    } else if (productData.image_url) {
+      formData.append("image_url", productData.image_url);
     }
 
     return apiClient.postForm<ProductRead>("/admin/products", formData);
@@ -293,7 +258,8 @@ export const adminProductsApi = {
 
   update: async (
     id: string,
-    productData: ProductUpdate
+    productData: ProductUpdate,
+    imageFile?: File,
   ): Promise<ProductRead> => {
     const formData = new FormData();
     if (productData.name) {
@@ -311,17 +277,10 @@ export const adminProductsApi = {
     if (productData.category_id) {
       formData.append("category_id", productData.category_id);
     }
-    if (productData.image_url) {
-      // Check if image_url is a base64 string (legacy) or R2 URL
-      if (
-        typeof productData.image_url === "string" &&
-        productData.image_url.startsWith("data:")
-      ) {
-        formData.append("image_base64", productData.image_url);
-      } else if (typeof productData.image_url === "string") {
-        // Direct R2 URL from presigned upload
-        formData.append("image_url", productData.image_url);
-      }
+    if (imageFile) {
+      formData.append("image", imageFile);
+    } else if (productData.image_url) {
+      formData.append("image_url", productData.image_url);
     }
 
     return apiClient.putForm<ProductRead>(`/admin/products/${id}`, formData);
@@ -358,10 +317,10 @@ export const adminUsersApi = {
   },
 
   getOrdersCount: async (
-    id: string
+    id: string,
   ): Promise<{ user_id: string; orders_count: number }> => {
     return apiClient.get<{ user_id: string; orders_count: number }>(
-      `/admin/users/${id}/orders-count`
+      `/admin/users/${id}/orders-count`,
     );
   },
 };
@@ -407,7 +366,7 @@ export const adminPartnersApi = {
 
   update: async (
     id: string,
-    partnerData: PartnerUpdate
+    partnerData: PartnerUpdate,
   ): Promise<PartnerRead> => {
     const formData = new FormData();
     if (partnerData.name) {

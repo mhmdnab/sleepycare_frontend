@@ -1,15 +1,23 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useParams } from 'next/navigation';
-import Image from 'next/image';
-import { ShoppingCart, Minus, Plus, Star, Leaf, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { ProductCard } from '@/components/ProductCard';
-import { useCartStore } from '@/lib/store/cart';
-import { formatPrice } from '@/lib/utils';
-import { Product } from '@/lib/store/cart';
-import { useProduct } from '@/lib/hooks/useQueries';
+import { useState } from "react";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import {
+  ShoppingCart,
+  Minus,
+  Plus,
+  Star,
+  Leaf,
+  Shield,
+  ImageOff,
+} from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { ProductCard } from "@/components/ProductCard";
+import { useCartStore } from "@/lib/store/cart";
+import { formatPrice } from "@/lib/utils";
+import { Product } from "@/lib/store/cart";
+import { useProduct } from "@/lib/hooks/useQueries";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -17,6 +25,7 @@ export default function ProductDetailPage() {
 
   const { data: product, isLoading: loading } = useProduct(productId);
   const [quantity, setQuantity] = useState(1);
+  const [imageError, setImageError] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   // Note: Related products would need a separate hook/query
@@ -43,8 +52,12 @@ export default function ProductDetailPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
-          <p className="text-gray-600">The product you&apos;re looking for doesn&apos;t exist.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Product Not Found
+          </h2>
+          <p className="text-gray-600">
+            The product you&apos;re looking for doesn&apos;t exist.
+          </p>
         </div>
       </div>
     );
@@ -58,13 +71,20 @@ export default function ProductDetailPage() {
           <div className="grid md:grid-cols-2 gap-8 p-6 lg:p-12">
             {/* Product Image */}
             <div className="relative h-96 md:h-[500px] bg-gray-100 rounded-lg overflow-hidden">
-              <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                className="object-cover"
-                priority
-              />
+              {product.image_url && !imageError ? (
+                <Image
+                  src={product.image_url}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  priority
+                  onError={() => setImageError(true)}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <ImageOff className="w-24 h-24 text-gray-400" />
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
@@ -78,7 +98,9 @@ export default function ProductDetailPage() {
                     {product.category}
                   </span>
                   <span className="text-green-600 font-medium">
-                    {product.stock > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
+                    {product.stock > 0
+                      ? `In Stock (${product.stock})`
+                      : "Out of Stock"}
                   </span>
                 </div>
               </div>
@@ -86,7 +108,10 @@ export default function ProductDetailPage() {
               {/* Rating */}
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  <Star
+                    key={i}
+                    className="w-5 h-5 text-yellow-400 fill-current"
+                  />
                 ))}
                 <span className="ml-2 text-gray-600">(127 reviews)</span>
               </div>
@@ -100,15 +125,21 @@ export default function ProductDetailPage() {
 
               {/* Description */}
               <div>
-                <h2 className="font-semibold text-xl mb-3">Product Description</h2>
-                <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                <h2 className="font-semibold text-xl mb-3">
+                  Product Description
+                </h2>
+                <p className="text-gray-700 leading-relaxed">
+                  {product.description}
+                </p>
               </div>
 
               {/* Features */}
               <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                 <div className="flex items-center space-x-3">
                   <Leaf className="w-5 h-5 text-green-600" />
-                  <span className="text-gray-700">Eco-friendly & Biodegradable</span>
+                  <span className="text-gray-700">
+                    Eco-friendly & Biodegradable
+                  </span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Shield className="w-5 h-5 text-blue-600" />
@@ -116,7 +147,9 @@ export default function ProductDetailPage() {
                 </div>
                 <div className="flex items-center space-x-3">
                   <Star className="w-5 h-5 text-yellow-600" />
-                  <span className="text-gray-700">Premium Quality Materials</span>
+                  <span className="text-gray-700">
+                    Premium Quality Materials
+                  </span>
                 </div>
               </div>
 
@@ -135,7 +168,9 @@ export default function ProductDetailPage() {
                     </button>
                     <span className="px-6 py-2 font-semibold">{quantity}</span>
                     <button
-                      onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                      onClick={() =>
+                        setQuantity(Math.min(product.stock, quantity + 1))
+                      }
                       className="px-4 py-2 hover:bg-gray-100"
                     >
                       <Plus className="w-4 h-4" />

@@ -1,11 +1,11 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export interface Product {
   id: string;
   name: string;
   price: number;
-  image: string;
+  image_url: string;
   category: string; // This will store category_id from backend
   description: string;
   stock: number;
@@ -32,14 +32,14 @@ export const useCartStore = create<CartStore>()(
 
       addItem: (product: Product) => {
         const items = get().items;
-        const existingItem = items.find(item => item.id === product.id);
+        const existingItem = items.find((item) => item.id === product.id);
 
         if (existingItem) {
           set({
-            items: items.map(item =>
+            items: items.map((item) =>
               item.id === product.id
                 ? { ...item, quantity: item.quantity + 1 }
-                : item
+                : item,
             ),
           });
         } else {
@@ -48,7 +48,7 @@ export const useCartStore = create<CartStore>()(
       },
 
       removeItem: (productId: string) => {
-        set({ items: get().items.filter(item => item.id !== productId) });
+        set({ items: get().items.filter((item) => item.id !== productId) });
       },
 
       updateQuantity: (productId: string, quantity: number) => {
@@ -56,8 +56,8 @@ export const useCartStore = create<CartStore>()(
           get().removeItem(productId);
         } else {
           set({
-            items: get().items.map(item =>
-              item.id === productId ? { ...item, quantity } : item
+            items: get().items.map((item) =>
+              item.id === productId ? { ...item, quantity } : item,
             ),
           });
         }
@@ -68,7 +68,10 @@ export const useCartStore = create<CartStore>()(
       },
 
       getTotalPrice: () => {
-        return get().items.reduce((total, item) => total + item.price * item.quantity, 0);
+        return get().items.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0,
+        );
       },
 
       getTotalItems: () => {
@@ -76,7 +79,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'cart-storage',
-    }
-  )
+      name: "cart-storage",
+    },
+  ),
 );
