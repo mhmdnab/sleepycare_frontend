@@ -197,7 +197,7 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     }>
-      <ResetPasswordContent />
+      <ResetPasswordForm />
     </Suspense>
   );
 }
