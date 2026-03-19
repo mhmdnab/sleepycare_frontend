@@ -1,4 +1,4 @@
-const API_URL = "https://sleepycare-backend.onrender.com";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://sleepycare-backend.onrender.com";
 
 export interface ApiError {
   detail: string;
