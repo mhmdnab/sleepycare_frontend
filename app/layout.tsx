@@ -3,16 +3,20 @@ import { Sofia_Sans, Pacifico } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/lib/providers/QueryProvider";
 
-const sofiaSans = Sofia_Sans({ subsets: ["latin"], variable: '--font-sofia-sans' });
-const pacifico = Pacifico({
-  weight: '400',
+const sofiaSans = Sofia_Sans({
   subsets: ["latin"],
-  variable: '--font-pacifico'
+  variable: "--font-sofia-sans",
+});
+const pacifico = Pacifico({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-pacifico",
 });
 
 export const metadata: Metadata = {
   title: "Sleepycare - Premium Wipes for Every Need",
-  description: "Shop high-quality surface wipes, floor wipes, and super clean series. Eco-friendly, safe, and effective cleaning solutions.",
+  description:
+    "Shop high-quality surface wipes, floor wipes, and super clean series. Eco-friendly, safe, and effective cleaning solutions.",
 };
 
 export default function RootLayout({
@@ -22,10 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${sofiaSans.variable} ${pacifico.variable} font-sans antialiased`}>
-        <QueryProvider>
-          {children}
-        </QueryProvider>
+      <body
+        className={`${sofiaSans.variable} ${pacifico.variable} font-sans antialiased`}
+      >
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

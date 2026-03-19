@@ -1,23 +1,29 @@
-'use client';
+"use client";
 
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { useState } from 'react';
+import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { useState } from "react";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -28,37 +34,39 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
-    setErrorMessage('');
+    setSubmitStatus("idle");
+    setErrorMessage("");
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error("Failed to send message");
       }
 
-      setSubmitStatus('success');
+      setSubmitStatus("success");
       setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
       });
 
       // Reset success message after 5 seconds
-      setTimeout(() => setSubmitStatus('idle'), 5000);
+      setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error) {
-      setSubmitStatus('error');
-      setErrorMessage(error instanceof Error ? error.message : 'Failed to send message');
+      setSubmitStatus("error");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Failed to send message"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -72,27 +80,32 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-600">
-            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            We'd love to hear from you. Send us a message and we'll respond as
+            soon as possible.
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <div className="bg-white rounded-2xl shadow-sm p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+              Send Us a Message
+            </h2>
 
-            {submitStatus === 'success' && (
+            {submitStatus === "success" && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <p className="text-sm text-green-800 font-medium">
-                  ✓ Thank you! Your message has been sent successfully. We'll get back to you soon.
+                  ✓ Thank you! Your message has been sent successfully. We'll
+                  get back to you soon.
                 </p>
               </div>
             )}
 
-            {submitStatus === 'error' && (
+            {submitStatus === "error" && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-sm text-red-800 font-medium">
-                  ✗ {errorMessage || 'Failed to send message. Please try again.'}
+                  ✗{" "}
+                  {errorMessage || "Failed to send message. Please try again."}
                 </p>
               </div>
             )}
@@ -100,7 +113,10 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     First Name *
                   </label>
                   <input
@@ -116,7 +132,10 @@ export default function ContactPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Last Name *
                   </label>
                   <input
@@ -133,7 +152,10 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Email Address *
                 </label>
                 <input
@@ -149,7 +171,10 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Phone Number
                 </label>
                 <input
@@ -164,7 +189,10 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="subject"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Subject *
                 </label>
                 <select
@@ -186,7 +214,10 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="message"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Message *
                 </label>
                 <textarea
@@ -208,7 +239,7 @@ export default function ContactPage() {
                 disabled={isSubmitting}
               >
                 <Send className="w-5 h-5 mr-2" />
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
 
               <p className="text-sm text-gray-500 text-center">
@@ -221,7 +252,9 @@ export default function ContactPage() {
           <div className="space-y-8">
             {/* Contact Details */}
             <div className="bg-white rounded-2xl shadow-sm p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                Contact Information
+              </h2>
 
               <div className="space-y-6">
                 <div className="flex items-start">
@@ -230,23 +263,15 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <a href="mailto:sleepycare.lb@gmail.com" className="text-gray-600 hover:text-primary-600 transition-colors">
+                    <a
+                      href="mailto:sleepycare.lb@gmail.com"
+                      className="text-gray-600 hover:text-primary-600 transition-colors"
+                    >
                       sleepycare.lb@gmail.com
                     </a>
-                    <p className="text-sm text-gray-500 mt-1">For general inquiries</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mr-4">
-                    <Mail className="w-6 h-6 text-primary-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Returns</h3>
-                    <a href="mailto:returns@sleepycare.com" className="text-gray-600 hover:text-primary-600 transition-colors">
-                      returns@sleepycare.com
-                    </a>
-                    <p className="text-sm text-gray-500 mt-1">For returns and refunds</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      For general inquiries
+                    </p>
                   </div>
                 </div>
 
@@ -256,10 +281,15 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                    <a href="tel:+96178749190" className="text-gray-600 hover:text-primary-600 transition-colors">
+                    <a
+                      href="tel:+96178749190"
+                      className="text-gray-600 hover:text-primary-600 transition-colors"
+                    >
                       + (961) 78-749190
                     </a>
-                    <p className="text-sm text-gray-500 mt-1">Mon-Fri, 9am-6pm EST</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Mon-Fri, 9am-6pm EST
+                    </p>
                   </div>
                 </div>
 
@@ -268,12 +298,15 @@ export default function ContactPage() {
                     <MapPin className="w-6 h-6 text-primary-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
+                    <h3 className="font-semibold text-gray-900 mb-1">
+                      Address
+                    </h3>
                     <p className="text-gray-600">
-                      123 Clean Street<br />
-                      Suite 100<br />
-                      New York, NY 10001<br />
-                      United States
+                      Tariq el Jdideh
+                      <br />
+                      Beirut
+                      <br />
+                      Lebanon
                     </p>
                   </div>
                 </div>
@@ -304,19 +337,25 @@ export default function ContactPage() {
 
               <div className="mt-6 p-4 bg-white/10 rounded-lg">
                 <p className="text-sm text-white/90">
-                  <strong>Note:</strong> We respond to all inquiries within 24-48 hours during business days.
+                  <strong>Note:</strong> We respond to all inquiries within
+                  24-48 hours during business days.
                 </p>
               </div>
             </div>
 
             {/* FAQ Link */}
             <div className="bg-primary-50 rounded-2xl p-8 text-center">
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Have a Quick Question?</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Have a Quick Question?
+              </h3>
               <p className="text-gray-600 mb-6">
                 Check out our FAQ page for instant answers to common questions.
               </p>
               <a href="/faq">
-                <Button variant="outline" className="border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white">
+                <Button
+                  variant="outline"
+                  className="border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white"
+                >
                   Visit FAQ
                 </Button>
               </a>
@@ -325,44 +364,43 @@ export default function ContactPage() {
         </div>
 
         {/* Additional Help Section */}
-        <div className="mt-12 grid md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-6 h-6 text-blue-600" />
+        <div className="mt-12 flex justify-center">
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
+            <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">
+                Track Your Order
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Get real-time updates on your order status
+              </p>
+              <a
+                href="/orders"
+                className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
+              >
+                Track Order →
+              </a>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Track Your Order</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Get real-time updates on your order status
-            </p>
-            <a href="/orders" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
-              Track Order →
-            </a>
-          </div>
 
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Phone className="w-6 h-6 text-green-600" />
+            <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">
+                Shipping Info
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Learn about our shipping options
+              </p>
+              <a
+                href="/shipping"
+                className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
+              >
+                Shipping Details →
+              </a>
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Start a Return</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Easy returns within 30 days
-            </p>
-            <a href="/returns" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
-              Return Policy →
-            </a>
-          </div>
-
-          <div className="bg-white rounded-xl p-6 text-center shadow-sm hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <MapPin className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="font-semibold text-gray-900 mb-2">Shipping Info</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Learn about our shipping options
-            </p>
-            <a href="/shipping" className="text-primary-600 hover:text-primary-700 font-semibold text-sm">
-              Shipping Details →
-            </a>
           </div>
         </div>
       </div>
